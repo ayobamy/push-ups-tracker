@@ -1,4 +1,3 @@
-import { ComingSoonGate } from "@/components/coming-soon-gate";
 import { PurseStandings } from "@/components/purse-standings";
 import { addCalendarDays, localDateFromInstant } from "@/lib/challenge/day";
 import { hitPaceMs } from "@/lib/challenge/hit-at";
@@ -127,9 +126,7 @@ export default async function PursePage() {
         {RECOVERY_HITS} hits in a row. Extra reps do not buy points. Top{" "}
         {TOP_REDEEM} redeem offline: cash, airtime, merch. No shop in the app.
       </p>
-      <ComingSoonGate>
-        <PurseStandings rows={rows} />
-      </ComingSoonGate>
+      <PurseStandings rows={rows} />
     </main>
   );
 }

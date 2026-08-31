@@ -1,4 +1,4 @@
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { HALF_POINTS, HIT_POINTS, RECOVERY_HITS } from "@/lib/challenge/purse";
 
@@ -18,13 +18,19 @@ describe("eval: year-end purse", () => {
     expect(spec).toContain("top 10");
     expect(spec).toContain("cash");
     expect(spec).toContain("airtime");
-    expect(spec).toContain("Coming soon");
+    expect(spec).toContain("Purse is live");
+    expect(spec).not.toContain("blurred");
   });
 
-  it("ships a Purse route that scores hits then blurs them", () => {
+  it("ships a Purse route with live standings, not a blur gate", () => {
     const page = readFileSync("app/app/purse/page.tsx", "utf8");
     expect(page).toContain("purseFromHits");
-    expect(page).toContain("ComingSoonGate");
+    expect(page).toContain("PurseStandings");
+    expect(page).not.toContain("ComingSoonGate");
     expect(readFileSync("app/app/nav.tsx", "utf8")).toContain("/app/purse");
+    expect(existsSync("components/coming-soon-gate.tsx")).toBe(false);
+    expect(readFileSync("components/purse-standings.tsx", "utf8")).toContain(
+      'aria-label="Purse standings"',
+    );
   });
 });

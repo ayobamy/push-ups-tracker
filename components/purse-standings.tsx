@@ -22,7 +22,7 @@ export function PurseStandings({ rows }: { rows: PurseStanding[] }) {
           </p>
         </section>
       ) : null}
-      <ol className="flex flex-col gap-3">
+      <ol className="flex flex-col gap-3" aria-label="Purse standings">
         {rows.map((row, index) => (
           <li
             key={row.id}

@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 
 /**
  * Juice: recap, PWA, hit flip, ceremony, weekly 7/7.
- * Purse stays coming soon. Pass threshold: every case.
+ * Purse is live. Pass threshold: every case.
  */
 describe("eval: juice features", () => {
   it("ships a web app manifest starting at Today", () => {
@@ -36,15 +36,10 @@ describe("eval: juice features", () => {
     );
   });
 
-  it("keeps the purse as a blurred coming-soon page", () => {
+  it("ships Purse as live standings", () => {
     const purse = readFileSync("app/app/purse/page.tsx", "utf8");
-    expect(purse).toContain("ComingSoonGate");
     expect(purse).toContain("purseFromHits");
-    expect(readFileSync("components/coming-soon-gate.tsx", "utf8")).toContain(
-      "Coming soon",
-    );
-    expect(readFileSync("components/coming-soon-gate.tsx", "utf8")).toContain(
-      "blur-md",
-    );
+    expect(purse).toContain("PurseStandings");
+    expect(purse).not.toContain("ComingSoonGate");
   });
 });

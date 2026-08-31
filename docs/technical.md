@@ -247,7 +247,7 @@ insert trigger.
 /app/board              leaderboard + today board
 /app/you                heatmap
 /app/you/recap          year recap card (fixed Recap button)
-/app/purse              year-end points, blurred coming soon
+/app/purse              live year-end points
 /app/settings           profile, export, delete
 /privacy                public
 ```

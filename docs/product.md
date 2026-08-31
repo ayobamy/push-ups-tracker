@@ -76,6 +76,7 @@ the four primary screens.
 - Today number flips once when you cross 100
 - One-shot Day 100 and Day 365 screens
 - Board: who has every elapsed day this week (7/7 on Sunday)
+- Purse: live points, top 10 redeem offline after day 365
 - Privacy page: what we store, export, delete account
 - Mobile-first layout, WCAG 2.2 AA
 
@@ -174,7 +175,14 @@ GitHub-style 365 heatmap. Tap a day to see that day's sets.
 Cannot add sets to a past day in v1 (keeps the honor honest).
 Cannot add sets to a future day.
 
-### 7. Settings
+### 7. Purse
+
+Live at `/app/purse`. Purse is live. Your points, then the ranked
+list. Hit 100: +10. Miss: 0, then +5 until 5 hits in a row. Extra
+reps do not buy points. Top 10 redeem offline after day 365: cash,
+airtime, merch. No shop in the app.
+
+### 8. Settings
 
 Display name, timezone (warns: "Past days stay on the timezone
 they were logged in"), sign out, export my data (JSON), delete
@@ -203,9 +211,9 @@ visible. Form errors are text, not color alone.
 ## Data the user sees vs data we keep
 
 Visible to other members: display name, daily totals, whether
-today is a hit, streak, lifetime reps, and `hit_at` (when the
-day first reached 100). Used to break rank ties. Not shown as a
-clock on the board.
+today is a hit, streak, lifetime reps, purse points, and
+`hit_at` (when the day first reached 100). Hit pace breaks rank
+ties. Not shown as a clock on the board.
 
 Visible only to you: individual set timestamps and any optional
 note.
@@ -233,35 +241,6 @@ lands costs a migration.
 
 Do not start these until the daily loop is boring in a good way.
 Nothing here may sit between "see today's number" and "log a set".
-
-### Year-end purse (points to redeem)
-
-Own tab at `/app/purse`. Scores are computed live, then blurred
-with "Coming soon" until the window ends. No catalog, no
-payments, no shop in the app.
-
-**Earn:** +10 the local day you hit 100.
-
-**Miss:** that day is 0, then every later hit is **+5** until you
-string **5 hits in a row**. Those five makeup days stay at 5.
-The next hit after that is +10 again. A miss during recovery
-restarts the five and stays at 5.
-
-**Surplus reps do not buy points.** A 200-rep day is +10 or +5,
-same as 100, depending on whether you are in half-rate.
-
-**Redeem:** purse locks when the shared window ends. Ahmed pays
-**top 10** offline: cash, airtime, merch. Ties break the same
-as the board (days hit, then streak, then total reps, then hit
-pace, then name). The app ranks. It does not take card details.
-
-Perfect year: 365 × 10 = 3650. One miss then five makeup days
-costs 10 (the miss) + 25 (five days at 5 instead of 10) = 35.
-
-### Other juice (ranked)
-
-Shipped: recap card, PWA, hit flip, day 100/365 ceremony, weekly
-perfect list. Purse stays coming soon.
 
 Leave in the out list: camera counting, rest-day freezes,
 comments, native apps, HealthKit. Those fight the frozen
