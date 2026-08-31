@@ -1,0 +1,65 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+  --heatmap-hit: #22c55e;
+  --heatmap-progress: #86efac;
+  --heatmap-zero: #e4e4e7;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not(.light) {
+    color-scheme: dark;
+    --background: #0a0a0a;
+    --foreground: #ededed;
+    --heatmap-hit: #4ade80;
+    --heatmap-progress: #166534;
+    --heatmap-zero: #3f3f46;
+  }
+}
+
+html.light {
+  color-scheme: light;
+  --background: #ffffff;
+  --foreground: #171717;
+  --heatmap-hit: #22c55e;
+  --heatmap-progress: #86efac;
+  --heatmap-zero: #e4e4e7;
+}
+
+html.dark {
+  color-scheme: dark;
+  --background: #0a0a0a;
+  --foreground: #ededed;
+  --heatmap-hit: #4ade80;
+  --heatmap-progress: #166534;
+  --heatmap-zero: #3f3f46;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-poppins), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-outfit), ui-sans-serif, system-ui, sans-serif;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+}
+
+input[type="date"] {
+  color-scheme: inherit;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  position: absolute;
+  right: 0;
+  width: 2.75rem;
+  height: 100%;
+  cursor: pointer;
+  opacity: 0;
+}

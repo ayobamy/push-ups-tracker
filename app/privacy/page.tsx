@@ -1,0 +1,27 @@
+import { StoicFooter } from "@/components/stoic-footer";
+
+export default function PrivacyPage() {
+  return (
+    <main className="mx-auto flex min-h-full w-full max-w-prose flex-col px-6 py-16">
+      <div className="flex flex-1 flex-col gap-6">
+        <h1 className="text-3xl font-semibold tracking-tight">Privacy</h1>
+        <p>
+          We store your email (for login), the display name and timezone you
+          choose, the push-up sets you log, and whether evening reminder mail is
+          on.
+        </p>
+        <p>
+          Challenge members can see your display name and daily totals. They
+          cannot see your email.
+        </p>
+        <p>
+          Evening reminders go from the same verified domain as auth mail, once
+          per local day, only if you are still short of 100 at 20:00. Stop them
+          from Settings or the unsubscribe link in the mail.
+        </p>
+        <p>Export your data in Settings. Delete-account is not shipped yet.</p>
+      </div>
+      <StoicFooter path="/privacy" />
+    </main>
+  );
+}
