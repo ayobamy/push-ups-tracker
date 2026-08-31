@@ -108,7 +108,7 @@ v1 has one row, seeded.
 | Column | Type | Notes |
 | --- | --- | --- |
 | `id` | uuid pk | `references auth.users on delete cascade` |
-| `display_name` | text | 2–32 chars, unique among members |
+| `display_name` | text | 2–32 chars, unique ignoring case |
 | `timezone` | text | IANA, check against a known list or
   `pg_timezone_names` |
 | `created_at` | timestamptz | |

@@ -122,7 +122,8 @@ Mail comes from Resend on a verified domain. Check spam.
 
 ### 3. First-run profile
 
-Fields: display name (required, 2–32 chars), timezone (pre-filled
+Fields: display name (required, 2–32 chars, unique ignoring
+case), timezone (pre-filled
 from the browser, editable).
 
 Copy: "Your day rolls at midnight in this timezone. Pick the

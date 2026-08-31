@@ -9,6 +9,21 @@ export function parseDisplayName(raw: string): NameResult {
   return { ok: true, displayName };
 }
 
+export function displayNameKey(raw: string): string {
+  return raw.trim().toLocaleLowerCase("en");
+}
+
+export function isDisplayNameTakenError(
+  error: { code?: string; message?: string } | null | undefined,
+): boolean {
+  if (!error) {
+    return false;
+  }
+  return (
+    error.code === "23505" || /duplicate|unique/i.test(error.message ?? "")
+  );
+}
+
 export function isIanaTimeZone(timeZone: string): boolean {
   try {
     Intl.DateTimeFormat("en-US", { timeZone });

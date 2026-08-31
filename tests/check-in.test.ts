@@ -1,7 +1,12 @@
 import { addCalendarDays, type IsoDate } from "@/lib/challenge/day";
 import { describe, expect, it } from "vitest";
 import { parseReps } from "@/lib/challenge/reps";
-import { isIanaTimeZone, parseDisplayName } from "@/lib/challenge/profile";
+import {
+  isIanaTimeZone,
+  parseDisplayName,
+  isDisplayNameTakenError,
+  displayNameKey,
+} from "@/lib/challenge/profile";
 import { challengeDayNumber, localHour } from "@/lib/challenge/schedule";
 
 describe("parseReps", () => {
@@ -30,6 +35,25 @@ describe("parseDisplayName", () => {
   it("rejects short and long names", () => {
     expect(parseDisplayName("J").ok).toBe(false);
     expect(parseDisplayName("x".repeat(33)).ok).toBe(false);
+  });
+});
+
+describe("isDisplayNameTakenError", () => {
+  it("treats Postgres unique_violation as taken", () => {
+    expect(isDisplayNameTakenError({ code: "23505" })).toBe(true);
+    expect(
+      isDisplayNameTakenError({
+        message: "duplicate key value violates unique constraint",
+      }),
+    ).toBe(true);
+    expect(isDisplayNameTakenError({ code: "PGRST205" })).toBe(false);
+  });
+});
+
+describe("displayNameKey", () => {
+  it("collapses case so Ahmed and ahmed are the same name", () => {
+    expect(displayNameKey("Ahmed")).toBe(displayNameKey("ahmed"));
+    expect(displayNameKey("  Jo ")).toBe("jo");
   });
 });
 

@@ -2,7 +2,11 @@
 
 import { localDateFromInstant } from "@/lib/challenge/day";
 import { appReturnPath } from "@/lib/challenge/paths";
-import { isIanaTimeZone, parseDisplayName } from "@/lib/challenge/profile";
+import {
+  isIanaTimeZone,
+  parseDisplayName,
+  isDisplayNameTakenError,
+} from "@/lib/challenge/profile";
 import { parseReps } from "@/lib/challenge/reps";
 import { isMissingTable } from "@/lib/supabase/errors";
 import { createClient } from "@/lib/supabase/server";
@@ -59,7 +63,7 @@ export async function completeProfile(formData: FormData) {
     if (isMissingTable(error)) {
       redirect(`${next}?error=schema-missing`);
     }
-    const taken = /duplicate|unique/i.test(error.message);
+    const taken = isDisplayNameTakenError(error);
     redirect(
       taken ? `${next}?error=name-taken` : `${next}?error=invalid-profile`,
     );

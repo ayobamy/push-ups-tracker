@@ -57,6 +57,9 @@ export function OnboardingForm({
           defaultValue={defaultName}
           className={fieldClass}
         />
+        <span className="font-normal text-zinc-500">
+          Shown on the board. Must be unique.
+        </span>
       </label>
       <label className="flex flex-col gap-2 text-sm font-medium">
         Timezone
