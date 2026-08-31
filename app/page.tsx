@@ -31,9 +31,6 @@ export default function HomePage() {
       <div className="flex flex-1 flex-col justify-center gap-10">
         <div className="flex flex-col gap-4">
           <BrandMark />
-          <p className="font-display text-sm uppercase tracking-[0.2em] text-amber-700">
-            Who is in
-          </p>
           <h1 className="font-display text-5xl font-semibold tracking-tight">
             100 a day. 365 days.
           </h1>
