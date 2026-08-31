@@ -257,8 +257,8 @@ Phase 1 until Phase 0 is done.
   migrations. Verify: tables in dashboard.
 - **8.A.7** Vercel project + env vars + Auth redirect URLs.
   Verify: production magic link lands on `/auth/confirm`.
-- **8.A.8** Set real `starts_on`. Verify: seed row updated;
-  share the site URL.
+- **8.A.8** Set real `starts_on` to **2026-08-31**. Verify: seed
+  row updated; Today shows Day 1 of 365 on 31 Aug.
 - **8.A.9** Upgrade Supabase to Pro if the challenge is live.
   Verify: pause is off in dashboard.
 - **8.A.10** Runbook dry-run: Ahmed can reset a magic link and

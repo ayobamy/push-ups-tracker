@@ -93,6 +93,13 @@ delete from auth.users where id = '<uuid>';
 
 Prefer the in-app "Delete my account" so they initiate it.
 
+## Challenge start date
+
+`challenges.starts_on` for slug `hundred-2026` is **2026-08-31**.
+Today before that date shows "Starts … Floor is 100." After the
+window, "Challenge window is over." Change it with a new
+migration, not a dashboard edit.
+
 ## Evening reminder cron
 
 Hobby only allows one run per day. `vercel.json` fires

@@ -23,7 +23,7 @@ Copied from Ahmed's brief, then made operational:
    hours. The day is won when the sum of that day's sets is at
    least 100.
 3. **The window is 365 consecutive days** from a shared start
-   date. Late joiners play the remaining days. Their score is
+   date of **2026-08-31**. Late joiners play the remaining days. Their score is
    `days hit / 365`, not a personal rolling year.
 4. **Honor system.** No camera, no AI counter, no photo proof in
    v1. The social board is the accountability.
@@ -106,7 +106,7 @@ Anything that adds a step between 2 and 4 is a bug.
 
 ### 1. Landing
 
-Headline: "100 a day. 365 days. Who is in."
+Headline: "100 a day. 365 days."
 
 Sub: "Log sets through the day. 100 is the floor."
 
@@ -200,7 +200,7 @@ phone.
 
 | Topic | Default | Why |
 | --- | --- | --- |
-| Start date | Ahmed sets `starts_on` in seed SQL | Shared 365, not rolling |
+| Start date | 2026-08-31 (`starts_on` on `hundred-2026`) | Shared 365, not rolling |
 | Join | Open: site URL + email/password | Ahmed 2026-08-31 |
 | Auth | Email + password | Ahmed 2026-08-31 |
 | Past-day edits | Forbidden in v1 | Stops silent score repair |
