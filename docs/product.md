@@ -135,7 +135,8 @@ The product. Everything else is secondary.
 - Big number: today's reps
 - Under it: `{remaining} left` or `Hit. Surplus {n}`
 - Preset row: 10, 20, 25, 50, Custom
-- Today's sets as a short list with edit / delete
+- Today's sets as a short list with edit / delete. Save count
+  writes the number in the box over that set. Delete asks first.
 - Streak count
 - Compact today board (first 8 names, "see all")
 - Challenge day index: "Day 47 of 365"
@@ -170,7 +171,8 @@ my account.
 
 Match Ahmed: short, concrete, no hype.
 
-- Buttons are verbs: "Log 25", "Send link", "Delete set"
+- Buttons are verbs: "Log 25", "Send link", "Save count",
+  "Delete set"
 - Errors name the fix: "Enter a whole number between 1 and 1000"
 - Never "Great job!!!" Never streaks-as-guilt beyond the evening
   remaining line

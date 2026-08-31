@@ -1,4 +1,6 @@
-import { deleteSet, logSet, updateSet } from "@/app/app/actions";
+import { logSet, updateSet } from "@/app/app/actions";
+import { DeleteSetControl } from "@/components/delete-set-control";
+import { SAVE_SET_LABEL } from "@/lib/challenge/set-edit";
 
 const PRESETS = [10, 20, 25, 50];
 
@@ -93,16 +95,14 @@ export function TodaySets({
               inputMode="numeric"
               className="h-11 w-20 rounded-lg border border-zinc-300 px-2 dark:border-zinc-700"
             />
-            <button type="submit" className="h-11 min-h-11 px-3 underline">
-              Save
+            <button
+              type="submit"
+              className="h-11 min-h-11 px-3 underline underline-offset-4 hover:text-amber-700 dark:hover:text-amber-400"
+            >
+              {SAVE_SET_LABEL}
             </button>
           </form>
-          <form action={deleteSet}>
-            <input type="hidden" name="id" value={set.id} />
-            <button type="submit" className="h-11 min-h-11 px-3 underline">
-              Delete
-            </button>
-          </form>
+          <DeleteSetControl id={set.id} reps={set.reps} />
         </li>
       ))}
     </ul>

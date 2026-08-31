@@ -218,7 +218,7 @@ Phase 1 until Phase 0 is done.
 - **6.A.4** Remaining / hit / surplus copy. Verify: 100 → "Hit";
   140 → surplus 40.
 - **6.A.5** Today's set list with edit + delete. Verify: delete
-  drops total; past-day controls absent.
+  asks first then drops total; past-day controls absent.
 - **6.A.6** Disable submit while pending. Verify: no double
   fire in Playwright (one click → one row).
 - **6.A.7** Live region announces new total. Verify: `aria-live`
