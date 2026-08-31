@@ -10,7 +10,7 @@ function Bone({ className }: { className: string }) {
 export function PageSkeleton({
   variant,
 }: {
-  variant: "today" | "board" | "you" | "settings";
+  variant: "today" | "board" | "you" | "settings" | "purse";
 }) {
   return (
     <main
@@ -25,6 +25,7 @@ export function PageSkeleton({
       {variant === "board" ? <BoardBones /> : null}
       {variant === "you" ? <YouBones /> : null}
       {variant === "settings" ? <SettingsBones /> : null}
+      {variant === "purse" ? <PurseBones /> : null}
     </main>
   );
 }
@@ -83,6 +84,17 @@ function SettingsBones() {
       <Bone className="h-12 w-full" />
       <Bone className="h-12 w-full" />
       <Bone className="h-12 w-full" />
+    </>
+  );
+}
+
+function PurseBones() {
+  return (
+    <>
+      <Bone className="h-24 w-28" />
+      <Bone className="h-14 w-full" />
+      <Bone className="h-14 w-full" />
+      <Bone className="h-14 w-full" />
     </>
   );
 }

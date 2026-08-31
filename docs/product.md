@@ -71,6 +71,11 @@ the four primary screens.
   reps, surplus over 100
 - Today board: who has hit 100, who is in progress, who is at 0
 - Milestone chips: 7 / 30 / 100 / 365 days hit
+- Year recap card (heatmap + days hit + longest streak), downloadable as PNG, SVG, and JPG
+- Add to home screen (PWA)
+- Today number flips once when you cross 100
+- One-shot Day 100 and Day 365 screens
+- Board: who has every elapsed day this week (7/7 on Sunday)
 - Privacy page: what we store, export, delete account
 - Mobile-first layout, WCAG 2.2 AA
 
@@ -136,8 +141,9 @@ The product. Everything else is secondary.
 - Big number: today's reps
 - Under it: `{remaining} left` or `Hit. Surplus {n}`
 - Preset row: 10, 20, 25, 50, Custom
-- Today's sets as a short list with edit / delete. Save count
-  writes the number in the box over that set. Delete asks first.
+- Today's sets as a short list with edit / delete. The number
+  is the set. Save count appears only after you change it, and
+  writes that number over the set. Delete asks first.
 - Streak count
 - Compact today board (first 8 names, "see all")
 - Challenge day index: "Day 47 of 365"
@@ -214,3 +220,41 @@ phone.
 If a default is wrong, say so before Phase 1 of
 [implementation](implementation.md). Changing them after schema
 lands costs a migration.
+
+## Coming soon (frozen enough to build later)
+
+Do not start these until the daily loop is boring in a good way.
+Nothing here may sit between "see today's number" and "log a set".
+
+### Year-end purse (points to redeem)
+
+Own tab at `/app/purse`. Scores are computed live, then blurred
+with "Coming soon" until the window ends. No catalog, no
+payments, no shop in the app.
+
+**Earn:** +10 the local day you hit 100.
+
+**Miss:** that day is 0, then every later hit is **+5** until you
+string **5 hits in a row**. Those five makeup days stay at 5.
+The next hit after that is +10 again. A miss during recovery
+restarts the five and stays at 5.
+
+**Surplus reps do not buy points.** A 200-rep day is +10 or +5,
+same as 100, depending on whether you are in half-rate.
+
+**Redeem:** purse locks when the shared window ends. Ahmed pays
+**top 10** offline: cash, airtime, merch. Ties break the same
+as the board (days hit, then streak, then total reps). The app
+ranks. It does not take card details.
+
+Perfect year: 365 × 10 = 3650. One miss then five makeup days
+costs 10 (the miss) + 25 (five days at 5 instead of 10) = 35.
+
+### Other juice (ranked)
+
+Shipped: recap card, PWA, hit flip, day 100/365 ceremony, weekly
+perfect list. Purse stays coming soon.
+
+Leave in the out list: camera counting, rest-day freezes,
+comments, native apps, HealthKit. Those fight the frozen
+rules.

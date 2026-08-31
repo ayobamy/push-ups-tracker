@@ -11,35 +11,38 @@ export default async function YouPage() {
     redirect("/login");
   }
 
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("timezone")
-    .eq("id", auth.user.id)
-    .single();
-  const timeZone = profile?.timezone ?? "UTC";
-  const today = localDateFromInstant(new Date(), timeZone);
-
-  const { data: challenge } = await supabase
-    .from("challenges")
-    .select("id, starts_on, duration_days")
-    .eq("slug", "hundred-2026")
-    .single();
+  const [{ data: profile }, { data: challenge }] = await Promise.all([
+    supabase
+      .from("profiles")
+      .select("timezone")
+      .eq("id", auth.user.id)
+      .single(),
+    supabase
+      .from("challenges")
+      .select("id, starts_on, duration_days")
+      .eq("slug", "hundred-2026")
+      .single(),
+  ]);
   if (!challenge) {
     redirect("/app?error=no-challenge");
   }
 
-  const { data: totals } = await supabase
-    .from("daily_totals")
-    .select("local_date, total_reps")
-    .eq("user_id", auth.user.id)
-    .eq("challenge_id", challenge.id);
+  const timeZone = profile?.timezone ?? "UTC";
+  const today = localDateFromInstant(new Date(), timeZone);
 
-  const { data: sets } = await supabase
-    .from("sets")
-    .select("local_date, reps, logged_at")
-    .eq("user_id", auth.user.id)
-    .eq("challenge_id", challenge.id)
-    .order("logged_at", { ascending: true });
+  const [{ data: totals }, { data: sets }] = await Promise.all([
+    supabase
+      .from("daily_totals")
+      .select("local_date, total_reps")
+      .eq("user_id", auth.user.id)
+      .eq("challenge_id", challenge.id),
+    supabase
+      .from("sets")
+      .select("local_date, reps, logged_at")
+      .eq("user_id", auth.user.id)
+      .eq("challenge_id", challenge.id)
+      .order("logged_at", { ascending: true }),
+  ]);
 
   const byDate = new Map(
     (totals ?? []).map((row) => [

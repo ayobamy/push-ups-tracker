@@ -12,6 +12,7 @@ describe("eval: app route skeletons", () => {
       ["app/app/board/loading.tsx", "board"],
       ["app/app/you/loading.tsx", "you"],
       ["app/app/settings/loading.tsx", "settings"],
+      ["app/app/purse/loading.tsx", "purse"],
     ] as const;
     for (const [path, variant] of files) {
       const src = readFileSync(path, "utf8");

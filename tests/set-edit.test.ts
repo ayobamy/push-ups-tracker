@@ -1,4 +1,8 @@
-import { deleteSetPrompt, SAVE_SET_LABEL } from "@/lib/challenge/set-edit";
+import {
+  deleteSetPrompt,
+  editSetDirty,
+  SAVE_SET_LABEL,
+} from "@/lib/challenge/set-edit";
 import { describe, expect, it } from "vitest";
 
 describe("deleteSetPrompt", () => {
@@ -10,5 +14,17 @@ describe("deleteSetPrompt", () => {
 describe("SAVE_SET_LABEL", () => {
   it("says the box is a count, not a new set", () => {
     expect(SAVE_SET_LABEL).toBe("Save count");
+  });
+});
+
+describe("editSetDirty", () => {
+  it("is false while the box still matches the logged set", () => {
+    expect(editSetDirty(25, "25")).toBe(false);
+    expect(editSetDirty(25, " 25 ")).toBe(false);
+  });
+
+  it("is true once the box is a different count", () => {
+    expect(editSetDirty(25, "20")).toBe(true);
+    expect(editSetDirty(25, "")).toBe(true);
   });
 });

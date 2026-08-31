@@ -8,23 +8,24 @@ export async function GET(request: NextRequest) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("display_name, timezone, created_at")
-    .eq("id", auth.user.id)
-    .single();
-
-  const { data: sets } = await supabase
-    .from("sets")
-    .select("id, reps, logged_at, local_date, note")
-    .eq("user_id", auth.user.id)
-    .order("logged_at", { ascending: true });
-
-  const { data: totals } = await supabase
-    .from("daily_totals")
-    .select("local_date, total_reps, hit_goal")
-    .eq("user_id", auth.user.id)
-    .order("local_date", { ascending: true });
+  const [{ data: profile }, { data: sets }, { data: totals }] =
+    await Promise.all([
+      supabase
+        .from("profiles")
+        .select("display_name, timezone, created_at")
+        .eq("id", auth.user.id)
+        .single(),
+      supabase
+        .from("sets")
+        .select("id, reps, logged_at, local_date, note")
+        .eq("user_id", auth.user.id)
+        .order("logged_at", { ascending: true }),
+      supabase
+        .from("daily_totals")
+        .select("local_date, total_reps, hit_goal")
+        .eq("user_id", auth.user.id)
+        .order("local_date", { ascending: true }),
+    ]);
 
   const payload = {
     exported_at: new Date().toISOString(),

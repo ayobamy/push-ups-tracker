@@ -36,6 +36,10 @@ export default async function SettingsPage({
       <p className="text-sm text-zinc-500">
         Past days stay on the timezone they were logged in.
       </p>
+      <p className="text-sm text-zinc-500">
+        Add to home screen. iPhone: Share, then Add to Home Screen. Android:
+        browser menu, Install app.
+      </p>
       <OnboardingForm
         error={error ? ERRORS[error] : undefined}
         submitLabel="Save"

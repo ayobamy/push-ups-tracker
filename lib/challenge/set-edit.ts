@@ -3,3 +3,7 @@ export function deleteSetPrompt(reps: number): string {
 }
 
 export const SAVE_SET_LABEL = "Save count";
+
+export function editSetDirty(original: number, raw: string): boolean {
+  return raw.trim() !== String(original);
+}

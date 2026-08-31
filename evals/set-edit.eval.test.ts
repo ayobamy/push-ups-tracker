@@ -21,9 +21,13 @@ describe("eval: set edit affordances", () => {
     expect(control).toContain('method="dialog"');
   });
 
-  it("save is labeled as writing the edited count", () => {
-    const checkIn = readFileSync("app/app/check-in.tsx", "utf8");
-    expect(checkIn).toContain("SAVE_SET_LABEL");
-    expect(checkIn).toContain("DeleteSetControl");
+  it("save is labeled as writing the edited count, and only when dirty", () => {
+    const row = readFileSync("components/today-set-row.tsx", "utf8");
+    expect(row).toContain("SAVE_SET_LABEL");
+    expect(row).toContain("editSetDirty");
+    expect(row).toContain("DeleteSetControl");
+    expect(readFileSync("app/app/check-in.tsx", "utf8")).toContain(
+      "TodaySetRow",
+    );
   });
 });

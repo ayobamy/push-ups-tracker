@@ -5,7 +5,11 @@ import {
   heatmapTone,
   initialHeatmapDate,
 } from "@/lib/challenge/heatmap";
-import { appReturnPath } from "@/lib/challenge/paths";
+import {
+  appReturnPath,
+  isAppNavCurrent,
+  isRecapPath,
+} from "@/lib/challenge/paths";
 import { earnedMilestones } from "@/lib/challenge/milestones";
 import { displayNameFromJoin } from "@/lib/challenge/profile";
 import { challengeDayLine, todayStatus } from "@/lib/challenge/today-copy";
@@ -128,6 +132,19 @@ describe("appReturnPath", () => {
     expect(appReturnPath("/app/settings")).toBe("/app/settings");
     expect(appReturnPath("/login")).toBe("/app");
     expect(appReturnPath(null)).toBe("/app");
+  });
+});
+
+describe("app chrome paths", () => {
+  it("does not treat Purse as Today", () => {
+    expect(isAppNavCurrent("/app", "/app")).toBe(true);
+    expect(isAppNavCurrent("/app/purse", "/app")).toBe(false);
+    expect(isAppNavCurrent("/app/purse", "/app/purse")).toBe(true);
+  });
+
+  it("marks recap from the year recap route", () => {
+    expect(isRecapPath("/app/you/recap")).toBe(true);
+    expect(isRecapPath("/app/you")).toBe(false);
   });
 });
 

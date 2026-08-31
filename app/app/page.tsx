@@ -1,6 +1,8 @@
 import { CheckIn, TodaySets } from "@/app/app/check-in";
 import { OnboardingForm } from "@/app/app/onboarding-form";
 import { BrandMark } from "@/components/brand-mark";
+import { CeremonyGate } from "@/components/ceremony-gate";
+import { TodayHitHero } from "@/components/today-hit";
 import { localDateFromInstant } from "@/lib/challenge/day";
 import { displayNameFromJoin } from "@/lib/challenge/profile";
 import {
@@ -41,11 +43,19 @@ export default async function AppHome({
     redirect("/login");
   }
 
-  const { data: profile, error: profileError } = await supabase
-    .from("profiles")
-    .select("id, display_name, timezone")
-    .eq("id", auth.user.id)
-    .single();
+  const [{ data: profile, error: profileError }, { data: challenge }] =
+    await Promise.all([
+      supabase
+        .from("profiles")
+        .select("id, display_name, timezone")
+        .eq("id", auth.user.id)
+        .single(),
+      supabase
+        .from("challenges")
+        .select("id, title, daily_goal, starts_on, duration_days")
+        .eq("slug", "hundred-2026")
+        .single(),
+    ]);
 
   if (isMissingTable(profileError) || error === "schema-missing") {
     return (
@@ -77,14 +87,6 @@ export default async function AppHome({
     );
   }
 
-  const { error: joinError } = await supabase.rpc("join_active_challenge");
-
-  const { data: challenge } = await supabase
-    .from("challenges")
-    .select("id, title, daily_goal, starts_on, duration_days")
-    .eq("slug", "hundred-2026")
-    .single();
-
   if (!challenge) {
     return (
       <main className="px-6 py-10">
@@ -100,13 +102,31 @@ export default async function AppHome({
   const dayNumber = challengeDayNumber(challenge.starts_on as string, today);
   const duration = challenge.duration_days as number;
 
-  const { data: sets } = await supabase
-    .from("sets")
-    .select("id, reps, logged_at")
-    .eq("user_id", auth.user.id)
-    .eq("challenge_id", challenge.id)
-    .eq("local_date", today)
-    .order("logged_at", { ascending: true });
+  const [{ data: sets }, { data: hits }, { data: members }, { data: totals }] =
+    await Promise.all([
+      supabase
+        .from("sets")
+        .select("id, reps, logged_at")
+        .eq("user_id", auth.user.id)
+        .eq("challenge_id", challenge.id)
+        .eq("local_date", today)
+        .order("logged_at", { ascending: true }),
+      supabase
+        .from("daily_totals")
+        .select("local_date")
+        .eq("user_id", auth.user.id)
+        .eq("challenge_id", challenge.id)
+        .eq("hit_goal", true),
+      supabase
+        .from("challenge_members")
+        .select("user_id, profiles(display_name)")
+        .eq("challenge_id", challenge.id),
+      supabase
+        .from("daily_totals")
+        .select("user_id, total_reps, hit_goal")
+        .eq("challenge_id", challenge.id)
+        .eq("local_date", today),
+    ]);
 
   const todayReps = (sets ?? []).reduce(
     (sum, set) => sum + (set.reps as number),
@@ -116,30 +136,12 @@ export default async function AppHome({
   const surplus = surplusOverGoal(goal, todayReps);
   const hit = hitGoal(goal, todayReps);
   const nudge = eveningNudge(localHour(now, timeZone), goal, todayReps);
-
-  const { data: hits } = await supabase
-    .from("daily_totals")
-    .select("local_date")
-    .eq("user_id", auth.user.id)
-    .eq("challenge_id", challenge.id)
-    .eq("hit_goal", true);
   const streak = currentStreak(
     (hits ?? []).map((row) => row.local_date as string),
     today,
   );
   const daysHit = (hits ?? []).length;
   const chips = earnedMilestones(daysHit);
-
-  const { data: members } = await supabase
-    .from("challenge_members")
-    .select("user_id, profiles(display_name)")
-    .eq("challenge_id", challenge.id);
-
-  const { data: totals } = await supabase
-    .from("daily_totals")
-    .select("user_id, total_reps, hit_goal")
-    .eq("challenge_id", challenge.id)
-    .eq("local_date", today);
 
   const totalByUser = new Map(
     (totals ?? []).map((row) => [
@@ -190,20 +192,9 @@ export default async function AppHome({
         </h1>
         <p className="text-sm text-zinc-500">{dayLine}</p>
       </header>
-      <p
-        className="font-display text-7xl font-semibold tracking-tight"
-        aria-live="polite"
-      >
-        {todayReps}
-      </p>
-      <p className="text-lg text-zinc-600 dark:text-zinc-400">{status}</p>
+      <TodayHitHero reps={todayReps} status={status} hit={hit} today={today} />
       {nudge ? (
         <p className="text-base text-amber-700 dark:text-amber-400">{nudge}</p>
-      ) : null}
-      {joinError ? (
-        <p className="text-sm text-red-700 dark:text-red-400" role="alert">
-          {ERRORS["join-failed"]}
-        </p>
       ) : null}
       {streak > 0 ? (
         <p className="text-sm text-zinc-500">Streak {streak}</p>
@@ -233,6 +224,7 @@ export default async function AppHome({
           ))}
         </ul>
       </section>
+      <CeremonyGate userId={auth.user.id} daysHit={daysHit} />
     </main>
   );
 }

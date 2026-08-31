@@ -52,6 +52,10 @@ redirect to `send-failed` ("Could not send the link").
 3. After signup, if email confirm is on, open the mail, then
    **log in** with the password. The link only confirms the
    address.
+4. Session cookies are HttpOnly, 400-day max-age. Closing the
+   browser should not log you out. If it still does after a
+   week, Auth → Settings: lengthen session / refresh-token
+   lifetime. Tokens are never stored in localStorage.
 
 ## Did not get the confirmation mail
 

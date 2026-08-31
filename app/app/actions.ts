@@ -88,14 +88,11 @@ export async function logSet(formData: FormData) {
   }
 
   const { supabase, user } = await requireUser();
-  const challengeId = await activeChallengeId(supabase);
-  await supabase.rpc("join_active_challenge");
-
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("timezone")
-    .eq("id", user.id)
-    .single();
+  const [challengeId, { data: profile }] = await Promise.all([
+    activeChallengeId(supabase),
+    supabase.from("profiles").select("timezone").eq("id", user.id).single(),
+    supabase.rpc("join_active_challenge"),
+  ]);
   const today = localDateFromInstant(new Date(), profile?.timezone ?? "UTC");
 
   const { error } = await supabase.from("sets").insert({

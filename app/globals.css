@@ -72,3 +72,20 @@ a[href],
 summary {
   cursor: pointer;
 }
+
+@media (prefers-reduced-motion: no-preference) {
+  .today-hit-flip {
+    animation: today-hit-flip 0.55s ease-out;
+  }
+}
+
+@keyframes today-hit-flip {
+  from {
+    transform: rotateX(88deg);
+    opacity: 0.35;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}

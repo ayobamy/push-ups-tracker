@@ -14,3 +14,21 @@ export function currentStreak(
   }
   return streak;
 }
+
+export function longestStreak(hitDates: readonly IsoDate[]): number {
+  if (hitDates.length === 0) {
+    return 0;
+  }
+  const sorted = [...new Set(hitDates)].sort();
+  let best = 1;
+  let run = 1;
+  for (let i = 1; i < sorted.length; i++) {
+    if (sorted[i] === addCalendarDays(sorted[i - 1], 1)) {
+      run += 1;
+      best = Math.max(best, run);
+    } else {
+      run = 1;
+    }
+  }
+  return best;
+}

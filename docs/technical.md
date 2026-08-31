@@ -61,6 +61,14 @@ or `getUser()` when a fresh Auth-server record is required.
 Never authorize from `getSession().user` alone. That rule is
 from the [Supabase Next.js tutorial][sb-next].
 
+Session cookies are first-party, `HttpOnly`, `SameSite=Lax`,
+`Secure` in production, max-age 400 days (Chrome's cap). The
+access JWT still expires in about an hour; `proxy.ts` refreshes
+it from the refresh token. Do not put tokens in `localStorage`
+(XSS can read it). Sign-out clears the cookies. If Auth
+Dashboard time-boxes sessions (often 7 days), raise that so a
+daily opener is not kicked out.
+
 [sb-next]: https://supabase.com/docs/guides/getting-started/tutorials/with-nextjs
 
 ## Day boundary
@@ -233,6 +241,8 @@ insert trigger.
 /app                    home / today
 /app/board              leaderboard + today board
 /app/you                heatmap
+/app/you/recap          year recap card (fixed Recap button)
+/app/purse              year-end points, blurred coming soon
 /app/settings           profile, export, delete
 /privacy                public
 ```
@@ -260,7 +270,7 @@ Next/Vercel default. Open Graph image is
 app/                    routes only
 components/             UI
 lib/supabase/           client.ts, server.ts, proxy.ts
-lib/challenge/          day.ts, streak.ts, remaining.ts
+lib/challenge/          day.ts, streak.ts, remaining.ts, purse.ts, week.ts
 lib/seo/                sitemap, robots, public metadata
 lib/actions/            server actions
 supabase/migrations/    SQL

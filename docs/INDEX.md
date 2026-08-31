@@ -4,8 +4,7 @@
 
 ## Start here
 
-- [Product spec](product.md) — who it is for, screens, what is
-  in v1
+- [Product spec](product.md) — who it is for, screens, v1, coming soon
 - [Technical design](technical.md) — stack, schema, RLS, cost
 - [Implementation](implementation.md) — intake + atomic tasks
 - [Runbook](runbook.md) — login broken, pause, remove a member

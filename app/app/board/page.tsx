@@ -3,6 +3,11 @@ import { dailySurplus, type BoardRow } from "@/lib/challenge/board";
 import { localDateFromInstant } from "@/lib/challenge/day";
 import { displayNameFromJoin } from "@/lib/challenge/profile";
 import { currentStreak } from "@/lib/challenge/streak";
+import {
+  mondayOfWeek,
+  weekPerfectNames,
+  weekScoreLine,
+} from "@/lib/challenge/week";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 
@@ -20,31 +25,34 @@ export default async function BoardPage() {
     redirect("/login");
   }
 
-  const { data: challenge } = await supabase
-    .from("challenges")
-    .select("id, daily_goal, starts_on")
-    .eq("slug", "hundred-2026")
-    .single();
+  const [{ data: challenge }, { data: profile }] = await Promise.all([
+    supabase
+      .from("challenges")
+      .select("id, daily_goal, starts_on")
+      .eq("slug", "hundred-2026")
+      .single(),
+    supabase
+      .from("profiles")
+      .select("timezone")
+      .eq("id", auth.user.id)
+      .single(),
+  ]);
   if (!challenge) {
     redirect("/app?error=no-challenge");
   }
 
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("timezone")
-    .eq("id", auth.user.id)
-    .single();
   const today = localDateFromInstant(new Date(), profile?.timezone ?? "UTC");
 
-  const { data: members } = await supabase
-    .from("challenge_members")
-    .select("user_id, profiles(display_name)")
-    .eq("challenge_id", challenge.id);
-
-  const { data: totals } = await supabase
-    .from("daily_totals")
-    .select("user_id, local_date, total_reps, hit_goal")
-    .eq("challenge_id", challenge.id);
+  const [{ data: members }, { data: totals }] = await Promise.all([
+    supabase
+      .from("challenge_members")
+      .select("user_id, profiles(display_name)")
+      .eq("challenge_id", challenge.id),
+    supabase
+      .from("daily_totals")
+      .select("user_id, local_date, total_reps, hit_goal")
+      .eq("challenge_id", challenge.id),
+  ]);
 
   const byUser = new Map<
     string,
@@ -85,11 +93,35 @@ export default async function BoardPage() {
     };
   });
 
+  const monday = mondayOfWeek(today);
+  const perfectWeek = weekPerfectNames(
+    rows.map((row) => ({
+      name: row.name,
+      hits: byUser.get(row.id)?.hits ?? [],
+    })),
+    monday,
+    today,
+  );
+  const weekLine = weekScoreLine(monday, today);
+
   return (
     <main className="flex flex-col gap-6 px-6 py-10">
       <h1 className="font-display text-4xl font-semibold tracking-tight">
         Board
       </h1>
+      <section className="flex flex-col gap-2">
+        <h2 className="font-display text-xl font-semibold">This week</h2>
+        <p className="text-sm text-zinc-500">{weekLine}</p>
+        {perfectWeek.length === 0 ? (
+          <p className="text-sm text-zinc-500">Nobody has every day yet.</p>
+        ) : (
+          <ul className="flex flex-col gap-1 text-sm">
+            {perfectWeek.map((name) => (
+              <li key={name}>{name}</li>
+            ))}
+          </ul>
+        )}
+      </section>
       <BoardList rows={rows} />
     </main>
   );

@@ -1,6 +1,5 @@
-import { logSet, updateSet } from "@/app/app/actions";
-import { DeleteSetControl } from "@/components/delete-set-control";
-import { SAVE_SET_LABEL } from "@/lib/challenge/set-edit";
+import { logSet } from "@/app/app/actions";
+import { TodaySetRow } from "@/components/today-set-row";
 
 const PRESETS = [10, 20, 25, 50];
 
@@ -78,32 +77,11 @@ export function TodaySets({
   return (
     <ul className="flex flex-col gap-3">
       {sets.map((set) => (
-        <li key={set.id} className="flex flex-wrap items-center gap-2 text-sm">
-          <span className="font-medium">{set.reps} reps</span>
-          <span className="text-zinc-500">
-            {time.format(new Date(set.logged_at))}
-          </span>
-          <form action={updateSet} className="ml-auto flex gap-2">
-            <input type="hidden" name="id" value={set.id} />
-            <label className="sr-only" htmlFor={`edit-${set.id}`}>
-              Edit reps
-            </label>
-            <input
-              id={`edit-${set.id}`}
-              name="reps"
-              defaultValue={set.reps}
-              inputMode="numeric"
-              className="h-11 w-20 rounded-lg border border-zinc-300 px-2 dark:border-zinc-700"
-            />
-            <button
-              type="submit"
-              className="h-11 min-h-11 px-3 underline underline-offset-4 hover:text-amber-700 dark:hover:text-amber-400"
-            >
-              {SAVE_SET_LABEL}
-            </button>
-          </form>
-          <DeleteSetControl id={set.id} reps={set.reps} />
-        </li>
+        <TodaySetRow
+          key={set.id}
+          set={set}
+          timeLabel={time.format(new Date(set.logged_at))}
+        />
       ))}
     </ul>
   );
