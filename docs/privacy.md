@@ -15,8 +15,8 @@ We do not store photos, GPS, heart rate, or your legal name.
 ## Who can see what
 
 Challenge members can see your display name, daily totals,
-streak, and whether you hit 100 today. They cannot see your
-email or per-set notes.
+streak, whether you hit 100 today, and when that day first
+reached 100. They cannot see your email or per-set notes.
 
 ## How long
 

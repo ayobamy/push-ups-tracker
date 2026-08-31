@@ -1,7 +1,8 @@
 import { ComingSoonGate } from "@/components/coming-soon-gate";
 import { PurseStandings } from "@/components/purse-standings";
 import { addCalendarDays, localDateFromInstant } from "@/lib/challenge/day";
-import { displayNameFromJoin } from "@/lib/challenge/profile";
+import { hitPaceMs } from "@/lib/challenge/hit-at";
+import { displayNameFromJoin, timezoneFromJoin } from "@/lib/challenge/profile";
 import {
   HALF_POINTS,
   HIT_POINTS,
@@ -27,6 +28,7 @@ type TotalsRow = {
   local_date: string;
   total_reps: number;
   hit_goal: boolean;
+  hit_at: string | null;
 };
 
 export default async function PursePage() {
@@ -63,20 +65,30 @@ export default async function PursePage() {
   const [{ data: members }, { data: totals }] = await Promise.all([
     supabase
       .from("challenge_members")
-      .select("user_id, profiles(display_name)")
+      .select("user_id, profiles(display_name, timezone)")
       .eq("challenge_id", challenge.id),
     supabase
       .from("daily_totals")
-      .select("user_id, local_date, total_reps, hit_goal")
+      .select("user_id, local_date, total_reps, hit_goal, hit_at")
       .eq("challenge_id", challenge.id),
   ]);
 
-  const byUser = new Map<string, { hits: string[]; reps: number }>();
+  const byUser = new Map<
+    string,
+    { hits: string[]; reps: number; hitAts: string[] }
+  >();
   for (const row of (totals ?? []) as TotalsRow[]) {
-    const current = byUser.get(row.user_id) ?? { hits: [], reps: 0 };
+    const current = byUser.get(row.user_id) ?? {
+      hits: [],
+      reps: 0,
+      hitAts: [],
+    };
     current.reps += row.total_reps;
     if (row.hit_goal) {
       current.hits.push(row.local_date);
+      if (row.hit_at) {
+        current.hitAts.push(row.hit_at);
+      }
     }
     byUser.set(row.user_id, current);
   }
@@ -86,20 +98,20 @@ export default async function PursePage() {
       const stats = byUser.get(member.user_id as string);
       const hits = stats?.hits ?? [];
       const purse = purseFromHits(hitSequence(startsOn, lastDay, hits));
+      const profiles = member.profiles as
+        | { display_name: string | null; timezone?: string | null }
+        | { display_name: string | null; timezone?: string | null }[]
+        | null;
       return {
         id: member.user_id as string,
-        name: displayNameFromJoin(
-          member.profiles as
-            | { display_name: string | null }
-            | { display_name: string | null }[]
-            | null,
-        ),
+        name: displayNameFromJoin(profiles),
         points: purse.total,
         half: purse.half,
         recoveryHits: purse.recoveryHits,
         daysHit: hits.length,
         streak: currentStreak(hits, today),
         total: stats?.reps ?? 0,
+        hitPaceMs: hitPaceMs(stats?.hitAts ?? [], timezoneFromJoin(profiles)),
         me: member.user_id === auth.user.id,
       };
     }),

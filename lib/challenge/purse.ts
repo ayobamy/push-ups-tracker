@@ -1,4 +1,5 @@
 import { addCalendarDays, type IsoDate } from "@/lib/challenge/day";
+import { compareStandingTies } from "@/lib/challenge/hit-at";
 
 export const HIT_POINTS = 10;
 export const HALF_POINTS = 5;
@@ -71,6 +72,7 @@ export type PurseStanding = {
   daysHit: number;
   streak: number;
   total: number;
+  hitPaceMs: number | null;
   me: boolean;
 };
 
@@ -85,6 +87,9 @@ export function sortPurse(rows: readonly PurseStanding[]): PurseStanding[] {
     if (b.streak !== a.streak) {
       return b.streak - a.streak;
     }
-    return b.total - a.total;
+    if (b.total !== a.total) {
+      return b.total - a.total;
+    }
+    return compareStandingTies(a, b);
   });
 }

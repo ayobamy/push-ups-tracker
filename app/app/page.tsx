@@ -3,6 +3,7 @@ import { OnboardingForm } from "@/app/app/onboarding-form";
 import { BrandMark } from "@/components/brand-mark";
 import { CeremonyGate } from "@/components/ceremony-gate";
 import { TodayHitHero } from "@/components/today-hit";
+import { sortTodayBoard } from "@/lib/challenge/board";
 import { localDateFromInstant } from "@/lib/challenge/day";
 import { displayNameFromJoin } from "@/lib/challenge/profile";
 import {
@@ -123,7 +124,7 @@ export default async function AppHome({
         .eq("challenge_id", challenge.id),
       supabase
         .from("daily_totals")
-        .select("user_id, total_reps, hit_goal")
+        .select("user_id, total_reps, hit_goal, hit_at")
         .eq("challenge_id", challenge.id)
         .eq("local_date", today),
     ]);
@@ -149,12 +150,13 @@ export default async function AppHome({
       {
         total: row.total_reps as number,
         hit: row.hit_goal as boolean,
+        hitAt: (row.hit_at as string | null) ?? null,
       },
     ]),
   );
 
-  const board = (members ?? [])
-    .map((member) => {
+  const board = sortTodayBoard(
+    (members ?? []).map((member) => {
       const stats = totalByUser.get(member.user_id as string);
       return {
         id: member.user_id as string,
@@ -166,14 +168,10 @@ export default async function AppHome({
         ),
         total: stats?.total ?? 0,
         hit: stats?.hit ?? false,
+        hitAt: stats?.hitAt ?? null,
       };
-    })
-    .sort((a, b) => {
-      if (a.hit !== b.hit) {
-        return a.hit ? -1 : 1;
-      }
-      return b.total - a.total;
-    });
+    }),
+  );
 
   const preview = board.slice(0, 8);
   const status = todayStatus(todayReps, remaining, surplus, hit);

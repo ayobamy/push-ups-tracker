@@ -17,8 +17,8 @@ export default function PrivacyPage() {
           on.
         </p>
         <p>
-          Challenge members can see your display name and daily totals. They
-          cannot see your email.
+          Challenge members can see your display name and daily totals,
+          including when your day first reached 100. They cannot see your email.
         </p>
         <p>
           Evening reminders go from the same verified domain as auth mail, once

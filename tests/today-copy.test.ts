@@ -1,4 +1,9 @@
-import { sortBoard, dailySurplus, type BoardRow } from "@/lib/challenge/board";
+import {
+  sortBoard,
+  sortTodayBoard,
+  dailySurplus,
+  type BoardRow,
+} from "@/lib/challenge/board";
 import {
   heatmapGridStart,
   heatmapSwatch,
@@ -24,6 +29,7 @@ const sample: BoardRow[] = [
     streak: 1,
     total: 250,
     surplus: 50,
+    hitPaceMs: null,
     me: false,
   },
   {
@@ -33,6 +39,7 @@ const sample: BoardRow[] = [
     streak: 3,
     total: 300,
     surplus: 0,
+    hitPaceMs: null,
     me: true,
   },
   {
@@ -42,6 +49,7 @@ const sample: BoardRow[] = [
     streak: 1,
     total: 400,
     surplus: 100,
+    hitPaceMs: null,
     me: false,
   },
 ];
@@ -82,6 +90,63 @@ describe("sortBoard", () => {
   it("can sort by streak or total", () => {
     expect(sortBoard(sample, "streak")[0].id).toBe("b");
     expect(sortBoard(sample, "total")[0].id).toBe("c");
+  });
+
+  it("breaks a full stats tie on earlier hit pace, then name", () => {
+    const tied: BoardRow[] = [
+      {
+        id: "2",
+        name: "Bea",
+        daysHit: 3,
+        streak: 3,
+        total: 300,
+        surplus: 0,
+        hitPaceMs: 8 * 3600 * 1000,
+        me: false,
+      },
+      {
+        id: "1",
+        name: "Ann",
+        daysHit: 3,
+        streak: 3,
+        total: 300,
+        surplus: 0,
+        hitPaceMs: 7 * 3600 * 1000,
+        me: false,
+      },
+    ];
+    expect(sortBoard(tied, "days").map((row) => row.id)).toEqual(["1", "2"]);
+    const samePace = tied.map((row) => ({
+      ...row,
+      hitPaceMs: 7 * 3600 * 1000,
+    }));
+    expect(sortBoard(samePace, "days").map((row) => row.name)).toEqual([
+      "Ann",
+      "Bea",
+    ]);
+  });
+});
+
+describe("sortTodayBoard", () => {
+  it("ranks hit first, then today's total, then who crossed 100 earlier", () => {
+    const ranked = sortTodayBoard([
+      {
+        id: "c",
+        name: "Cal",
+        total: 100,
+        hit: true,
+        hitAt: "2026-08-31T09:00:00.000Z",
+      },
+      {
+        id: "a",
+        name: "Ann",
+        total: 100,
+        hit: true,
+        hitAt: "2026-08-31T07:00:00.000Z",
+      },
+      { id: "b", name: "Bea", total: 40, hit: false, hitAt: null },
+    ]);
+    expect(ranked.map((row) => row.id)).toEqual(["a", "c", "b"]);
   });
 });
 

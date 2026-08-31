@@ -170,13 +170,18 @@ Materialized by trigger on `sets`, not by the client.
 | `local_date` | date | |
 | `total_reps` | int | |
 | `hit_goal` | boolean | `total_reps >= daily_goal` |
+| `hit_at` | timestamptz | `logged_at` of the set that first made the running sum reach `daily_goal`. Null if the day is short. |
 | `updated_at` | timestamptz | |
 | primary key | `(user_id, challenge_id, local_date)` | |
 
 Trigger: after insert/update/delete on `sets`, re-sum that
-`(user_id, challenge_id, local_date)` and upsert. One row per
+`(user_id, challenge_id, local_date)` and upsert. `hit_at` is
+the earliest `logged_at` whose running sum (ordered by
+`logged_at`, then `id`) is at least the floor. One row per
 member per day. Leaderboard reads this table, not a live `SUM`
-over all sets.
+over all sets. Last rank key is mean local time of day of
+`hit_at`, not wall-clock date, so which days you hit cannot
+steal a tie.
 
 ### Views (security_invoker)
 

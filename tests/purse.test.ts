@@ -70,6 +70,7 @@ describe("sortPurse", () => {
         daysHit: 9,
         streak: 9,
         total: 900,
+        hitPaceMs: null,
         me: false,
       },
       {
@@ -81,6 +82,7 @@ describe("sortPurse", () => {
         daysHit: 2,
         streak: 1,
         total: 200,
+        hitPaceMs: null,
         me: true,
       },
       {
@@ -92,9 +94,27 @@ describe("sortPurse", () => {
         daysHit: 9,
         streak: 2,
         total: 900,
+        hitPaceMs: null,
         me: false,
       },
     ];
     expect(sortPurse(rows).map((row) => row.id)).toEqual(["a", "b", "c"]);
+  });
+
+  it("breaks a full stats tie on earlier hit pace", () => {
+    const base = {
+      points: 30,
+      half: false,
+      recoveryHits: 0,
+      daysHit: 3,
+      streak: 3,
+      total: 300,
+      me: false,
+    };
+    const ranked = sortPurse([
+      { ...base, id: "b", name: "Bea", hitPaceMs: 8 * 3600 * 1000 },
+      { ...base, id: "a", name: "Ann", hitPaceMs: 7 * 3600 * 1000 },
+    ]);
+    expect(ranked.map((row) => row.id)).toEqual(["a", "b"]);
   });
 });

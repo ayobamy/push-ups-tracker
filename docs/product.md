@@ -155,7 +155,13 @@ Zero state, evening (local hour ≥ 20 and total < 100):
 ### 5. Leaderboard
 
 Default sort: **days hit** descending, then current streak, then
-total reps.
+total reps. If those three match, **hit pace**: mean local time
+of day of the `logged_at` of the set that first made the day sum
+reach 100. Earlier pace ranks higher. Still tied: display name
+A-Z, then user id.
+
+Today's snippet: hit, then today's total, then who crossed 100
+first (UTC `hit_at`).
 
 Columns: rank, name, days hit, streak, total, surplus.
 
@@ -197,7 +203,9 @@ visible. Form errors are text, not color alone.
 ## Data the user sees vs data we keep
 
 Visible to other members: display name, daily totals, whether
-today is a hit, streak, lifetime reps.
+today is a hit, streak, lifetime reps, and `hit_at` (when the
+day first reached 100). Used to break rank ties. Not shown as a
+clock on the board.
 
 Visible only to you: individual set timestamps and any optional
 note.
@@ -244,8 +252,8 @@ same as 100, depending on whether you are in half-rate.
 
 **Redeem:** purse locks when the shared window ends. Ahmed pays
 **top 10** offline: cash, airtime, merch. Ties break the same
-as the board (days hit, then streak, then total reps). The app
-ranks. It does not take card details.
+as the board (days hit, then streak, then total reps, then hit
+pace, then name). The app ranks. It does not take card details.
 
 Perfect year: 365 × 10 = 3650. One miss then five makeup days
 costs 10 (the miss) + 25 (five days at 5 instead of 10) = 35.

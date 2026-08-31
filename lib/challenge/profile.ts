@@ -33,10 +33,25 @@ export function isIanaTimeZone(timeZone: string): boolean {
   }
 }
 
+export type ProfileJoin = {
+  display_name?: string | null;
+  timezone?: string | null;
+};
+
 export function displayNameFromJoin(
-  nested:
-    { display_name: string | null } | { display_name: string | null }[] | null,
+  nested: ProfileJoin | ProfileJoin[] | null,
 ): string {
   const row = Array.isArray(nested) ? nested[0] : nested;
   return row?.display_name ?? "Unnamed";
+}
+
+export function timezoneFromJoin(
+  nested: ProfileJoin | ProfileJoin[] | null,
+): string {
+  const row = Array.isArray(nested) ? nested[0] : nested;
+  const timeZone = row?.timezone;
+  if (!timeZone || !isIanaTimeZone(timeZone)) {
+    return "UTC";
+  }
+  return timeZone;
 }
