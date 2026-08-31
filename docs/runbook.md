@@ -4,8 +4,38 @@ Ops notes for 100 a Day. Ahmed is on-call.
 
 ## URLs
 
-- App: set after Vercel deploy
+- App: `https://100-days-push-ups.fit`
+- Vercel alias: `https://push-ups-tracker-liard.vercel.app`
 - Supabase dashboard: `https://supabase.com/dashboard/project/<ref>`
+
+## Custom domain
+
+Apex `https://100-days-push-ups.fit` is the public origin. Nameservers
+are already `ns1.vercel-dns.com` / `ns2.vercel-dns.com`.
+
+If the browser still fails, flush local DNS, try without `www`,
+and wait up to 48h if you just changed nameservers.
+
+Then lock Auth to that origin (Vercel env is baked at **build**):
+
+1. Vercel → Project → Settings → Environment Variables.
+   Set `NEXT_PUBLIC_SITE_URL` to `https://100-days-push-ups.fit`
+   (no trailing slash). Production (and Preview if you want).
+2. Redeploy Production. Env changes do not apply to the last
+   build until you redeploy.
+3. Supabase → Authentication → URL configuration.
+   Site URL = `https://100-days-push-ups.fit`.
+   Redirect allow list must include
+   `https://100-days-push-ups.fit/auth/confirm`
+   (keep the `vercel.app` confirm URL too until you stop using
+   that host).
+4. Vercel → Settings → Domains. Apex = production. Add `www`
+   and **Redirect to** the apex. Do not leave `www` as a second
+   primary if it 500s.
+
+Until step 2, `/robots.txt` still points the sitemap at
+`push-ups-tracker-liard.vercel.app`, and signup mail still
+redirects there.
 
 ## Auth is broken (loop back to log in)
 

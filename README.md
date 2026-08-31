@@ -2,6 +2,8 @@
 
 Web tracker for the challenge: 100 push-ups a day for 365 days.
 
+Live: [100-days-push-ups.fit](https://100-days-push-ups.fit/)
+
 Anyone with the site link can create an account (email and
 password) and start logging sets.
 
