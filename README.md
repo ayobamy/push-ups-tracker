@@ -28,4 +28,4 @@ Supabase project.
 
 ## Agent contract
 
-[AGENTS.md](AGENTS.md) (`CLAUDE.md` is a symlink to it).
+[AGENTS.md](AGENTS.md) (`CLAUDE.md` is a symlink to it)
