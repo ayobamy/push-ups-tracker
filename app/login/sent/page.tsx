@@ -26,7 +26,7 @@ export default async function SentPage({
     : "/login/forgot";
 
   return (
-    <main className="mx-auto flex min-h-full w-full max-w-md flex-col px-6 py-16">
+    <main className="mx-auto flex min-h-svh w-full max-w-md flex-col px-6 pt-16 pb-6">
       <div className="flex flex-1 flex-col justify-center gap-8">
         <div>
           <p className="font-display text-sm uppercase tracking-[0.2em] text-amber-700">

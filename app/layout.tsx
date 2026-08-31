@@ -34,7 +34,7 @@ export default function RootLayout({
       <head>
         <script dangerouslySetInnerHTML={{ __html: THEME_BOOT_SCRIPT }} />
       </head>
-      <body className="flex min-h-full flex-col font-sans">
+      <body className="flex min-h-svh flex-col font-sans">
         <ThemeToggle />
         {children}
       </body>
