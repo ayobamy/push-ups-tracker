@@ -1,7 +1,12 @@
 import { requestPasswordReset } from "@/app/login/actions";
+import { BrandMark } from "@/components/brand-mark";
 import { ResendConfirmation } from "@/components/resend-confirmation";
 import { StoicFooter } from "@/components/stoic-footer";
+import { NOINDEX } from "@/lib/seo/site";
+import type { Metadata } from "next";
 import Link from "next/link";
+
+export const metadata: Metadata = { title: "Check your email", ...NOINDEX };
 
 const STATUS: Record<string, string> = {
   resent: "Sent again. Check inbox and spam.",
@@ -29,10 +34,8 @@ export default async function SentPage({
     <main className="mx-auto flex min-h-svh w-full max-w-md flex-col px-6 pt-16 pb-6">
       <div className="flex flex-1 flex-col justify-center gap-8">
         <div>
-          <p className="font-display text-sm uppercase tracking-[0.2em] text-amber-700">
-            100 a day
-          </p>
-          <h1 className="font-display mt-2 text-4xl font-semibold tracking-tight">
+          <BrandMark />
+          <h1 className="font-display mt-6 text-4xl font-semibold tracking-tight">
             {already ? "Account already exists" : "Confirm your email"}
           </h1>
           <p className="mt-3 text-base text-zinc-600 dark:text-zinc-400">

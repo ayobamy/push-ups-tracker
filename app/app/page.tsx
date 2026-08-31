@@ -1,5 +1,6 @@
 import { CheckIn, TodaySets } from "@/app/app/check-in";
 import { OnboardingForm } from "@/app/app/onboarding-form";
+import { BrandMark } from "@/components/brand-mark";
 import { localDateFromInstant } from "@/lib/challenge/day";
 import { displayNameFromJoin } from "@/lib/challenge/profile";
 import {
@@ -49,9 +50,7 @@ export default async function AppHome({
   if (isMissingTable(profileError) || error === "schema-missing") {
     return (
       <main className="flex flex-col gap-6 px-6 py-10">
-        <p className="font-display text-sm uppercase tracking-[0.2em] text-amber-700">
-          100 a day
-        </p>
+        <BrandMark />
         <h1 className="font-display text-4xl font-semibold tracking-tight">
           Database is not set up
         </h1>
@@ -65,9 +64,7 @@ export default async function AppHome({
   if (!profile?.display_name) {
     return (
       <main className="flex flex-col gap-6 px-6 py-10">
-        <p className="font-display text-sm uppercase tracking-[0.2em] text-amber-700">
-          100 a day
-        </p>
+        <BrandMark />
         <h1 className="font-display text-4xl font-semibold tracking-tight">
           Your name and day
         </h1>
@@ -186,10 +183,8 @@ export default async function AppHome({
 
   return (
     <main className="flex flex-col gap-8 px-6 py-10">
-      <header className="flex flex-col gap-2">
-        <p className="font-display text-sm uppercase tracking-[0.2em] text-amber-700">
-          100 a day
-        </p>
+      <header className="flex flex-col gap-3">
+        <BrandMark />
         <h1 className="font-display text-4xl font-semibold tracking-tight">
           Today
         </h1>

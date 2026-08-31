@@ -1,11 +1,36 @@
+import { BrandMark } from "@/components/brand-mark";
 import { StoicFooter } from "@/components/stoic-footer";
+import {
+  SITE_NAME,
+  SITE_TAGLINE,
+  publicPageMetadata,
+  publicSiteOrigin,
+} from "@/lib/seo/site";
+import type { Metadata } from "next";
 import Link from "next/link";
 
+export const metadata: Metadata = publicPageMetadata("/");
+
 export default function HomePage() {
+  const origin = publicSiteOrigin();
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    name: SITE_NAME,
+    description: SITE_TAGLINE,
+    url: origin,
+    applicationCategory: "HealthApplication",
+  };
+
   return (
     <main className="mx-auto flex min-h-svh w-full max-w-lg flex-col px-6 pt-16 pb-6">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <div className="flex flex-1 flex-col justify-center gap-10">
         <div className="flex flex-col gap-4">
+          <BrandMark />
           <p className="font-display text-sm uppercase tracking-[0.2em] text-amber-700">
             Who is in
           </p>

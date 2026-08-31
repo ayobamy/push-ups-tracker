@@ -1,7 +1,12 @@
 import { signUp } from "@/app/login/actions";
+import { BrandMark } from "@/components/brand-mark";
 import { StoicFooter } from "@/components/stoic-footer";
 import { PasswordField } from "@/components/password-field";
+import { publicPageMetadata } from "@/lib/seo/site";
+import type { Metadata } from "next";
 import Link from "next/link";
+
+export const metadata: Metadata = publicPageMetadata("/signup");
 
 const ERRORS: Record<string, string> = {
   "invalid-email": "Enter a real email address.",
@@ -27,10 +32,8 @@ export default async function SignupPage({
     <main className="mx-auto flex min-h-svh w-full max-w-md flex-col px-6 pt-16 pb-6">
       <div className="flex flex-1 flex-col justify-center gap-8">
         <div>
-          <p className="font-display text-sm uppercase tracking-[0.2em] text-amber-700">
-            100 a day
-          </p>
-          <h1 className="font-display mt-2 text-4xl font-semibold tracking-tight">
+          <BrandMark />
+          <h1 className="font-display mt-6 text-4xl font-semibold tracking-tight">
             Create an account
           </h1>
           <p className="mt-3 text-base text-zinc-600 dark:text-zinc-400">

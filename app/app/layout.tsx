@@ -1,4 +1,9 @@
 import { AppNav } from "@/app/app/nav";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  robots: { index: false, follow: false },
+};
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
   return (

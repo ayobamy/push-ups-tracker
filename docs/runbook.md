@@ -93,6 +93,18 @@ delete from auth.users where id = '<uuid>';
 
 Prefer the in-app "Delete my account" so they initiate it.
 
+## Evening reminder cron
+
+Hobby only allows one run per day. `vercel.json` fires
+`/api/cron/remind` at **19:00 UTC** (20:00 in Africa/Lagos).
+Vercel may invoke any time in that hour. Needs `CRON_SECRET`.
+
+## Sitemap and robots
+
+Live at `/sitemap.xml` and `/robots.txt`. They use
+`NEXT_PUBLIC_SITE_URL`. After deploy, hard-refresh once so the
+tab icon is the 100 mark, not a cached Vercel/Next favicon.
+
 ## Backups
 
 Free: none. Pro: daily, 7 days. Do not wait until day 200 to

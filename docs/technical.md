@@ -241,6 +241,19 @@ insert trigger.
 users hitting `/app/*` redirect to `/login`. Authenticated users
 missing `display_name` redirect to `/onboarding`.
 
+## SEO
+
+Public pages (`/`, `/signup`, `/login`, `/privacy`) are in
+`app/sitemap.ts` and allowed in `app/robots.ts`. Logged-in
+`/app/*`, `/auth/*`, `/api/*`, and password-reset flows are
+disallowed. `/app` also sets `robots: noindex`.
+
+Absolute sitemap and Open Graph URLs come from
+`NEXT_PUBLIC_SITE_URL` via `lib/seo/site.ts`. Tab icon is
+`app/favicon.ico` plus `app/icon.svg` (the 100 mark), not the
+Next/Vercel default. Open Graph image is
+`app/opengraph-image.tsx`.
+
 ## Module layout (inside the Next app)
 
 ```text
@@ -248,6 +261,7 @@ app/                    routes only
 components/             UI
 lib/supabase/           client.ts, server.ts, proxy.ts
 lib/challenge/          day.ts, streak.ts, remaining.ts
+lib/seo/                sitemap, robots, public metadata
 lib/actions/            server actions
 supabase/migrations/    SQL
 supabase/tests/         RLS tests
