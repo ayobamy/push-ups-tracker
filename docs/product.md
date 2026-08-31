@@ -180,7 +180,8 @@ Cannot add sets to a future day.
 Live at `/app/purse`. Purse is live. Your points, then the ranked
 list. Hit 100: +10. Miss: 0, then +5 until 5 hits in a row. Extra
 reps do not buy points. Top 10 redeem offline after day 365: cash,
-airtime, merch. No shop in the app.
+airtime, merch. No shop in the app. Those ten rows are solid
+metal fills, gold down to deep bronze.
 
 ### 8. Settings
 

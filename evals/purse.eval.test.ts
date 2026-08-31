@@ -19,6 +19,8 @@ describe("eval: year-end purse", () => {
     expect(spec).toContain("cash");
     expect(spec).toContain("airtime");
     expect(spec).toContain("Purse is live");
+    expect(spec).toContain("metal fills");
+    expect(spec).toContain("deep bronze");
     expect(spec).not.toContain("blurred");
   });
 
@@ -31,6 +33,9 @@ describe("eval: year-end purse", () => {
     expect(existsSync("components/coming-soon-gate.tsx")).toBe(false);
     expect(readFileSync("components/purse-standings.tsx", "utf8")).toContain(
       'aria-label="Purse standings"',
+    );
+    expect(readFileSync("components/purse-standings.tsx", "utf8")).toContain(
+      "purseLane",
     );
   });
 });

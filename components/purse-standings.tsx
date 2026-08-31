@@ -1,3 +1,4 @@
+import { purseLane } from "@/lib/challenge/purse-lane";
 import {
   HIT_POINTS,
   RECOVERY_HITS,
@@ -23,31 +24,62 @@ export function PurseStandings({ rows }: { rows: PurseStanding[] }) {
         </section>
       ) : null}
       <ol className="flex flex-col gap-3" aria-label="Purse standings">
-        {rows.map((row, index) => (
-          <li
-            key={row.id}
-            className={`flex items-center gap-3 rounded-2xl border px-3 py-3 ${
-              row.me
-                ? "border-amber-500"
-                : "border-zinc-200 dark:border-zinc-800"
-            }`}
-          >
-            <span className="w-8 shrink-0 text-zinc-500">{index + 1}.</span>
-            <div className="min-w-0 flex-1">
-              <p className="truncate font-medium">
-                {row.name}
-                {row.me ? " (you)" : ""}
+        {rows.map((row, index) => {
+          const lane = purseLane(index);
+          const place = index + 1;
+          const meRing = row.me
+            ? lane
+              ? "ring-2 ring-zinc-950 ring-offset-2 ring-offset-[var(--background)] dark:ring-amber-400"
+              : "ring-2 ring-amber-500"
+            : "";
+          const shell = lane
+            ? "border-0"
+            : row.me
+              ? ""
+              : "border border-zinc-200 dark:border-zinc-800";
+          return (
+            <li
+              key={row.id}
+              className={`flex items-center gap-3 rounded-2xl px-3 ${
+                lane ? "py-4" : "py-3"
+              } ${meRing} ${shell}`}
+              style={
+                lane
+                  ? { backgroundColor: lane.background, color: lane.ink }
+                  : undefined
+              }
+            >
+              <span
+                className={`w-8 shrink-0 font-display ${
+                  lane ? "text-lg font-semibold" : "text-zinc-500"
+                }`}
+              >
+                {place}.
+              </span>
+              <div className="min-w-0 flex-1">
+                <p
+                  className={`truncate font-medium ${
+                    lane ? "font-display text-lg tracking-tight" : ""
+                  }`}
+                >
+                  {row.name}
+                  {row.me ? " (you)" : ""}
+                </p>
+                <p className={lane ? "text-sm" : "text-sm text-zinc-500"}>
+                  {row.daysHit} days · streak {row.streak}
+                  {row.half ? " · half" : ""}
+                </p>
+              </div>
+              <p
+                className={`font-display font-semibold tabular-nums ${
+                  lane ? "text-2xl" : "text-xl"
+                }`}
+              >
+                {row.points}
               </p>
-              <p className="text-sm text-zinc-500">
-                {row.daysHit} days · streak {row.streak}
-                {row.half ? " · half" : ""}
-              </p>
-            </div>
-            <p className="font-display text-xl font-semibold tabular-nums">
-              {row.points}
-            </p>
-          </li>
-        ))}
+            </li>
+          );
+        })}
       </ol>
       {rows.length > TOP_REDEEM ? (
         <p className="text-sm text-zinc-500">
