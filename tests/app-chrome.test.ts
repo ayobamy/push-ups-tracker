@@ -17,5 +17,8 @@ describe("app chrome", () => {
     const today = readFileSync("app/app/page.tsx", "utf8");
     expect(today).not.toContain("/app/you/recap");
     expect(today).not.toContain("/app/purse");
+    expect(today.indexOf("<CheckIn")).toBeLessThan(
+      today.indexOf("{todayHitLine"),
+    );
   });
 });

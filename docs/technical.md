@@ -226,7 +226,7 @@ Anon: no table grants. Auth lives on `/login`.
 | `deleteSet` | id | sets (same day) |
 | `updateSettings` | name / timezone | profiles |
 | `exportMyData` | — | read-only JSON |
-| `deleteAccount` | confirm | Auth user delete |
+| `deleteAccount` | confirm = DELETE | RPC `delete_own_account` |
 
 `logSet` is idempotent enough: each tap is a new set. Double
 submit of the same form is two sets. The UI disables the button
@@ -348,9 +348,10 @@ MAU still fine, egress and product scope are the issue.
 
 Secrets: `NEXT_PUBLIC_SUPABASE_URL`,
 `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` in the browser (expected).
-Service role key never in the Next app. If `deleteAccount` needs
-it, it lives in a Supabase Edge Function, not a Server Action
-env on Vercel until we must.
+Service role key never in the Next app. Account delete is
+`delete_own_account()`, a security-definer RPC that deletes
+`auth.users` for `auth.uid()` so profile, membership, sets, and
+totals cascade. No Edge Function and no service role on Vercel.
 
 ## Privacy
 

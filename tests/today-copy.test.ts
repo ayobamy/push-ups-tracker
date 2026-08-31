@@ -17,7 +17,11 @@ import {
 } from "@/lib/challenge/paths";
 import { earnedMilestones } from "@/lib/challenge/milestones";
 import { displayNameFromJoin } from "@/lib/challenge/profile";
-import { challengeDayLine, todayStatus } from "@/lib/challenge/today-copy";
+import {
+  challengeDayLine,
+  todayHitLine,
+  todayStatus,
+} from "@/lib/challenge/today-copy";
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
@@ -78,6 +82,14 @@ describe("challengeDayLine", () => {
     expect(challengeDayLine(366, 365, "2026-09-01")).toBe(
       "Challenge window is over.",
     );
+  });
+});
+
+describe("todayHitLine", () => {
+  it("names how many of the group have hit today", () => {
+    expect(todayHitLine(0, 21)).toBe("0 of 21 hit");
+    expect(todayHitLine(12, 21)).toBe("12 of 21 hit");
+    expect(todayHitLine(21, 21)).toBe("21 of 21 hit");
   });
 });
 
@@ -237,5 +249,7 @@ describe("home page is not the stub", () => {
     const src = readFileSync("app/app/page.tsx", "utf8");
     expect(src).not.toMatch(/Check-in lands here/);
     expect(src).toMatch(/todayStatus/);
+    expect(src).toContain("todayHitLine");
+    expect(src).not.toContain("slice(0, 8)");
   });
 });

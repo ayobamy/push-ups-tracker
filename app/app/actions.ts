@@ -1,5 +1,6 @@
 "use server";
 
+import { deleteAccountConfirmMatches } from "@/lib/challenge/account";
 import { localDateFromInstant } from "@/lib/challenge/day";
 import { appReturnPath } from "@/lib/challenge/paths";
 import {
@@ -17,6 +18,7 @@ function revalidateApp() {
   revalidatePath("/app");
   revalidatePath("/app/board");
   revalidatePath("/app/you");
+  revalidatePath("/app/purse");
   revalidatePath("/app/settings");
 }
 
@@ -151,6 +153,25 @@ export async function signOut() {
   const supabase = await createClient();
   await supabase.auth.signOut();
   redirect("/login");
+}
+
+export async function deleteAccount(formData: FormData) {
+  const typed = String(formData.get("confirm") ?? "");
+  if (!deleteAccountConfirmMatches(typed)) {
+    redirect("/app/settings?error=delete-confirm");
+  }
+
+  const { supabase } = await requireUser();
+  const { error } = await supabase.rpc("delete_own_account");
+  if (error) {
+    if (isMissingTable(error)) {
+      redirect("/app/settings?error=schema-missing");
+    }
+    redirect("/app/settings?error=delete-failed");
+  }
+
+  await supabase.auth.signOut();
+  redirect("/");
 }
 
 export async function setRemindersOptIn(formData: FormData) {

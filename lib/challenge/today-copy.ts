@@ -26,3 +26,7 @@ export function challengeDayLine(
   }
   return `Day ${dayNumber} of ${duration}`;
 }
+
+export function todayHitLine(hitCount: number, memberCount: number): string {
+  return `${hitCount} of ${memberCount} hit`;
+}

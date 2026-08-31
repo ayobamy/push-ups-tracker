@@ -1,14 +1,25 @@
 import { OnboardingForm } from "@/app/app/onboarding-form";
 import { setRemindersOptIn, signOut } from "@/app/app/actions";
+import { DeleteAccountControl } from "@/components/delete-account-control";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 
 const ERRORS: Record<string, string> = {
-  "name-taken": "That name is taken. Pick another.",
   "invalid-profile": "Name 2–32 characters, and a real timezone.",
+  "name-taken": "That name is taken. Pick another.",
   "join-failed": "Could not join the challenge. Try again.",
+  "delete-confirm": "Type DELETE to confirm.",
+  "delete-failed": "Could not delete the account. Try again.",
+  "schema-missing":
+    "Database tables are missing. Apply the latest supabase/migrations in the SQL editor, then refresh.",
 };
+
+const PROFILE_ERRORS = new Set([
+  "invalid-profile",
+  "name-taken",
+  "join-failed",
+]);
 
 export default async function SettingsPage({
   searchParams,
@@ -41,7 +52,7 @@ export default async function SettingsPage({
         browser menu, Install app.
       </p>
       <OnboardingForm
-        error={error ? ERRORS[error] : undefined}
+        error={error && PROFILE_ERRORS.has(error) ? ERRORS[error] : undefined}
         submitLabel="Save"
         defaultName={profile?.display_name ?? ""}
         defaultTimezone={profile?.timezone ?? "UTC"}
@@ -79,6 +90,14 @@ export default async function SettingsPage({
           Sign out
         </button>
       </form>
+      {error === "delete-confirm" ||
+      error === "delete-failed" ||
+      error === "schema-missing" ? (
+        <p className="text-sm text-red-700 dark:text-red-400" role="alert">
+          {ERRORS[error]}
+        </p>
+      ) : null}
+      <DeleteAccountControl />
     </main>
   );
 }

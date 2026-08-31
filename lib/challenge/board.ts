@@ -19,6 +19,7 @@ export type TodayBoardRow = {
   total: number;
   hit: boolean;
   hitAt: string | null;
+  me?: boolean;
 };
 
 export { compareStandingTies };

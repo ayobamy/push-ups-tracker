@@ -15,7 +15,11 @@ import {
 import { challengeDayNumber, localHour } from "@/lib/challenge/schedule";
 import { currentStreak } from "@/lib/challenge/streak";
 import { earnedMilestones } from "@/lib/challenge/milestones";
-import { challengeDayLine, todayStatus } from "@/lib/challenge/today-copy";
+import {
+  challengeDayLine,
+  todayHitLine,
+  todayStatus,
+} from "@/lib/challenge/today-copy";
 import { isMissingTable } from "@/lib/supabase/errors";
 import { createClient } from "@/lib/supabase/server";
 import Link from "next/link";
@@ -169,11 +173,12 @@ export default async function AppHome({
         total: stats?.total ?? 0,
         hit: stats?.hit ?? false,
         hitAt: stats?.hitAt ?? null,
+        me: member.user_id === auth.user.id,
       };
     }),
   );
 
-  const preview = board.slice(0, 8);
+  const hitCount = board.filter((row) => row.hit).length;
   const status = todayStatus(todayReps, remaining, surplus, hit);
   const dayLine = challengeDayLine(
     dayNumber,
@@ -204,18 +209,31 @@ export default async function AppHome({
       ) : null}
       <CheckIn error={error ? ERRORS[error] : undefined} />
       <TodaySets sets={sets ?? []} timeZone={timeZone} />
-      <section className="flex flex-col gap-3">
+      <section className="flex flex-col gap-4">
         <div className="flex items-baseline justify-between">
           <h2 className="font-display text-xl font-semibold">Today board</h2>
           <Link href="/app/board" className="text-sm underline">
-            See all
+            Year board
           </Link>
         </div>
+        <p className="font-display text-5xl font-semibold tracking-tight">
+          {hitCount}
+          <span className="text-2xl text-zinc-500"> / {board.length}</span>
+        </p>
+        <p className="text-sm text-zinc-500">
+          {todayHitLine(hitCount, board.length)}
+        </p>
         <ul className="flex flex-col gap-2 text-sm">
-          {preview.map((row) => (
-            <li key={row.id} className="flex justify-between">
-              <span>{row.name}</span>
-              <span className="text-zinc-500">
+          {board.map((row) => (
+            <li key={row.id} className="flex justify-between gap-3">
+              <span className="min-w-0 truncate">
+                {row.name}
+                {row.me ? " (you)" : ""}
+              </span>
+              <span
+                className={row.hit ? "font-medium" : "text-zinc-500"}
+                style={row.hit ? { color: "var(--heatmap-hit)" } : undefined}
+              >
                 {row.hit ? "Hit" : row.total}
               </span>
             </li>

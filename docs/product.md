@@ -146,7 +146,8 @@ The product. Everything else is secondary.
   is the set. Save count appears only after you change it, and
   writes that number over the set. Delete asks first.
 - Streak count
-- Compact today board (first 8 names, "see all")
+- Compact today board: how many hit, every name, link to the
+  year board
 - Challenge day index: "Day 47 of 365"
 
 Zero state, morning: "Nothing logged. Floor is 100."
@@ -187,7 +188,8 @@ metal fills, gold down to deep bronze.
 
 Display name, timezone (warns: "Past days stay on the timezone
 they were logged in"), sign out, export my data (JSON), delete
-my account.
+my account. Delete asks you to type DELETE. Auth user delete
+cascades profile, membership, sets, and totals.
 
 ## Copy voice
 

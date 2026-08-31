@@ -25,7 +25,7 @@ export default function PrivacyPage() {
           per local day, only if you are still short of 100 at 20:00. Stop them
           from Settings or the unsubscribe link in the mail.
         </p>
-        <p>Export your data in Settings. Delete-account is not shipped yet.</p>
+        <p>Export your data or delete your account in Settings.</p>
       </div>
       <StoicFooter path="/privacy" />
     </main>

@@ -1,5 +1,9 @@
 import { eveningNudge } from "@/lib/challenge/remaining";
-import { challengeDayLine, todayStatus } from "@/lib/challenge/today-copy";
+import {
+  challengeDayLine,
+  todayHitLine,
+  todayStatus,
+} from "@/lib/challenge/today-copy";
 import { describe, expect, it } from "vitest";
 
 /**
@@ -13,5 +17,6 @@ describe("eval: Today copy contract", () => {
     expect(todayStatus(120, 0, 20, true)).toBe("Hit. Surplus 20");
     expect(eveningNudge(20, 100, 70)).toBe("Still 30 short before midnight.");
     expect(challengeDayLine(1, 365, "2026-09-01")).toBe("Day 1 of 365");
+    expect(todayHitLine(12, 21)).toBe("12 of 21 hit");
   });
 });
