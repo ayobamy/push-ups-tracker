@@ -3,6 +3,7 @@ import { reminderCopy, shouldSendEveningReminder } from "@/lib/mail/remind";
 import { escapeHtml } from "@/lib/mail/remind-render";
 import { pickReminderTargets } from "@/lib/mail/remind-run";
 import { quoteForPath, STOIC_QUOTES } from "@/lib/quotes/stoic";
+import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
 describe("podiumPlace", () => {
@@ -40,13 +41,14 @@ describe("shouldSendEveningReminder", () => {
     durationDays: 365,
   };
 
-  it("sends at 20:00 when short, in window, opted in, not yet mailed", () => {
+  it("sends in the 19–20 local hour when short, in window, opted in, not yet mailed", () => {
     expect(shouldSendEveningReminder(base)).toBe(true);
+    expect(shouldSendEveningReminder({ ...base, localHour: 19 })).toBe(true);
   });
 
-  it("does not nag after a hit, before start, or twice", () => {
+  it("does not nag after a hit, before evening, or twice", () => {
     expect(shouldSendEveningReminder({ ...base, todayReps: 100 })).toBe(false);
-    expect(shouldSendEveningReminder({ ...base, localHour: 19 })).toBe(false);
+    expect(shouldSendEveningReminder({ ...base, localHour: 18 })).toBe(false);
     expect(shouldSendEveningReminder({ ...base, alreadySent: true })).toBe(
       false,
     );
@@ -72,8 +74,19 @@ describe("escapeHtml", () => {
   });
 });
 
+describe("vercel cron", () => {
+  it("runs the reminder route once a day at 19:00 UTC", () => {
+    const config = JSON.parse(readFileSync("vercel.json", "utf8")) as {
+      crons: { path: string; schedule: string }[];
+    };
+    expect(config.crons).toEqual([
+      { path: "/api/cron/remind", schedule: "0 19 * * *" },
+    ]);
+  });
+});
+
 describe("pickReminderTargets", () => {
-  it("keeps only the 20:00 short list", () => {
+  it("keeps the evening short list on a once-a-day Hobby cron", () => {
     const picked = pickReminderTargets([
       {
         id: "00000000-0000-4000-8000-000000000001",

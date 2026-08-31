@@ -11,7 +11,7 @@ export function shouldSendEveningReminder(input: {
   if (!input.optIn || input.alreadySent) {
     return false;
   }
-  if (input.localHour !== 20) {
+  if (input.localHour < 19 || input.localHour > 20) {
     return false;
   }
   if (input.todayReps >= input.goal) {
