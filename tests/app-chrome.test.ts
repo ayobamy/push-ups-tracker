@@ -22,10 +22,10 @@ describe("app chrome", () => {
     );
   });
 
-  it("caps Today names at five and sends the rest to Board", () => {
+  it("caps Today names at five and expands on Today, not Board", () => {
     const today = readFileSync("app/app/page.tsx", "utf8");
     const board = readFileSync("app/app/board/page.tsx", "utf8");
-    expect(today).toContain("previewTodayBoard(board)");
+    expect(today).toContain("previewTodayBoard");
     expect(today).toContain("todayHitLine(hitCount, board.length)");
     expect(today).toContain("{hitCount}");
     expect(today).toContain("/ {board.length}");
@@ -33,12 +33,12 @@ describe("app chrome", () => {
       today.indexOf("<TodayRoster"),
     );
     expect(today.indexOf("<TodayRoster")).toBeLessThan(
-      today.indexOf('href="/app/board#today"'),
+      today.indexOf('href={showEveryone ? "/app" : "/app?roster=all"}'),
     );
     expect(today).toContain("todayBoardListLabel");
-    expect(board).toContain('id="today"');
-    expect(board).toContain('label="Everyone today"');
-    expect(board).not.toContain("previewTodayBoard");
+    expect(today).toContain("See everyone");
+    expect(board).not.toContain('id="today"');
+    expect(board).not.toContain("TodayRoster");
     expect(board).toContain(">Year</h2>");
   });
 });

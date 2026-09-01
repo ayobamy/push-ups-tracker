@@ -147,7 +147,7 @@ The product. Everything else is secondary.
   writes that number over the set. Delete asks first.
 - Streak count
 - Compact today board: how many hit (full count), first 5
-  names of the sorted list, link to see everyone on Board
+  names of the sorted list, link to see everyone on Today
 - Challenge day index: "Day 47 of 365"
 
 Zero state, morning: "Nothing logged. Floor is 100."

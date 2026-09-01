@@ -21,6 +21,7 @@ import {
   challengeDayLine,
   previewTodayBoard,
   TODAY_BOARD_PREVIEW,
+  isFullTodayRoster,
   todayBoardListLabel,
   todayHitLine,
   todayStatus,
@@ -111,6 +112,14 @@ describe("todayBoardListLabel", () => {
   it("says the list is a preview when names are truncated", () => {
     expect(todayBoardListLabel(5, 33)).toBe("First 5 of 33");
     expect(todayBoardListLabel(3, 3)).toBe("Today's board");
+  });
+});
+
+describe("isFullTodayRoster", () => {
+  it("only expands when roster=all", () => {
+    expect(isFullTodayRoster("all")).toBe(true);
+    expect(isFullTodayRoster(undefined)).toBe(false);
+    expect(isFullTodayRoster("five")).toBe(false);
   });
 });
 
@@ -272,8 +281,9 @@ describe("home page is not the stub", () => {
     expect(src).toMatch(/todayStatus/);
     expect(src).toContain("todayHitLine");
     expect(src).toContain("previewTodayBoard");
-    expect(src).toContain("/app/board#today");
+    expect(src).toContain("/app?roster=all");
     expect(src).toContain("See everyone");
+    expect(src).not.toContain("/app/board#today");
     expect(src).not.toContain("Year board");
     expect(src).not.toContain("slice(0, 8)");
   });

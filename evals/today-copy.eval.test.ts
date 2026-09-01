@@ -3,6 +3,7 @@ import {
   challengeDayLine,
   previewTodayBoard,
   TODAY_BOARD_PREVIEW,
+  isFullTodayRoster,
   todayBoardListLabel,
   todayHitLine,
   todayStatus,
@@ -29,5 +30,7 @@ describe("eval: Today copy contract", () => {
     expect(previewTodayBoard(roster)).toHaveLength(5);
     expect(todayHitLine(5, roster.length)).toBe("5 of 33 hit");
     expect(todayBoardListLabel(5, 33)).toBe("First 5 of 33");
+    expect(isFullTodayRoster("all")).toBe(true);
+    expect(isFullTodayRoster(undefined)).toBe(false);
   });
 });

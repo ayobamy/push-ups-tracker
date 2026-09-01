@@ -46,3 +46,7 @@ export function todayBoardListLabel(shown: number, total: number): string {
   }
   return "Today's board";
 }
+
+export function isFullTodayRoster(roster: string | undefined): boolean {
+  return roster === "all";
+}

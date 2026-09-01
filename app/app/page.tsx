@@ -19,6 +19,7 @@ import { earnedMilestones } from "@/lib/challenge/milestones";
 import {
   challengeDayLine,
   previewTodayBoard,
+  isFullTodayRoster,
   todayBoardListLabel,
   todayHitLine,
   todayStatus,
@@ -42,9 +43,9 @@ const ERRORS: Record<string, string> = {
 export default async function AppHome({
   searchParams,
 }: {
-  searchParams: Promise<{ error?: string }>;
+  searchParams: Promise<{ error?: string; roster?: string }>;
 }) {
-  const { error } = await searchParams;
+  const { error, roster } = await searchParams;
   const supabase = await createClient();
   const { data: auth } = await supabase.auth.getUser();
   if (!auth.user) {
@@ -182,7 +183,8 @@ export default async function AppHome({
   );
 
   const hitCount = board.filter((row) => row.hit).length;
-  const preview = previewTodayBoard(board);
+  const showEveryone = isFullTodayRoster(roster);
+  const listed = showEveryone ? board : previewTodayBoard(board);
   const status = todayStatus(todayReps, remaining, surplus, hit);
   const dayLine = challengeDayLine(
     dayNumber,
@@ -223,15 +225,19 @@ export default async function AppHome({
           {todayHitLine(hitCount, board.length)}
         </p>
         <TodayRoster
-          rows={preview}
-          label={todayBoardListLabel(preview.length, board.length)}
+          rows={listed}
+          label={todayBoardListLabel(listed.length, board.length)}
         />
         <Link
-          href="/app/board#today"
+          href={showEveryone ? "/app" : "/app?roster=all"}
           className="w-fit text-sm underline"
-          aria-label="See everyone on today's board"
+          aria-label={
+            showEveryone
+              ? "Show the first five on today's board"
+              : "See everyone on today's board"
+          }
         >
-          See everyone
+          {showEveryone ? "Show five" : "See everyone"}
         </Link>
       </section>
       <CeremonyGate userId={auth.user.id} daysHit={daysHit} />
