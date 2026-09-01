@@ -1,6 +1,9 @@
 import { eveningNudge } from "@/lib/challenge/remaining";
 import {
   challengeDayLine,
+  previewTodayBoard,
+  TODAY_BOARD_PREVIEW,
+  todayBoardListLabel,
   todayHitLine,
   todayStatus,
 } from "@/lib/challenge/today-copy";
@@ -18,5 +21,13 @@ describe("eval: Today copy contract", () => {
     expect(eveningNudge(20, 100, 70)).toBe("Still 30 short before midnight.");
     expect(challengeDayLine(1, 365, "2026-09-01")).toBe("Day 1 of 365");
     expect(todayHitLine(12, 21)).toBe("12 of 21 hit");
+  });
+
+  it("shows five names on Today while the count stays the full roster", () => {
+    const roster = Array.from({ length: 33 }, (_, i) => i + 1);
+    expect(TODAY_BOARD_PREVIEW).toBe(5);
+    expect(previewTodayBoard(roster)).toHaveLength(5);
+    expect(todayHitLine(5, roster.length)).toBe("5 of 33 hit");
+    expect(todayBoardListLabel(5, 33)).toBe("First 5 of 33");
   });
 });

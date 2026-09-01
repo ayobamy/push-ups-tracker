@@ -21,4 +21,24 @@ describe("app chrome", () => {
       today.indexOf("{todayHitLine"),
     );
   });
+
+  it("caps Today names at five and sends the rest to Board", () => {
+    const today = readFileSync("app/app/page.tsx", "utf8");
+    const board = readFileSync("app/app/board/page.tsx", "utf8");
+    expect(today).toContain("previewTodayBoard(board)");
+    expect(today).toContain("todayHitLine(hitCount, board.length)");
+    expect(today).toContain("{hitCount}");
+    expect(today).toContain("/ {board.length}");
+    expect(today.indexOf("{hitCount}")).toBeLessThan(
+      today.indexOf("<TodayRoster"),
+    );
+    expect(today.indexOf("<TodayRoster")).toBeLessThan(
+      today.indexOf('href="/app/board#today"'),
+    );
+    expect(today).toContain("todayBoardListLabel");
+    expect(board).toContain('id="today"');
+    expect(board).toContain('label="Everyone today"');
+    expect(board).not.toContain("previewTodayBoard");
+    expect(board).toContain(">Year</h2>");
+  });
 });

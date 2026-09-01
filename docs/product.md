@@ -146,8 +146,8 @@ The product. Everything else is secondary.
   is the set. Save count appears only after you change it, and
   writes that number over the set. Delete asks first.
 - Streak count
-- Compact today board: how many hit, every name, link to the
-  year board
+- Compact today board: how many hit (full count), first 5
+  names of the sorted list, link to see everyone on Board
 - Challenge day index: "Day 47 of 365"
 
 Zero state, morning: "Nothing logged. Floor is 100."

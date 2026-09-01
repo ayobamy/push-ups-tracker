@@ -3,6 +3,7 @@ import { OnboardingForm } from "@/app/app/onboarding-form";
 import { BrandMark } from "@/components/brand-mark";
 import { CeremonyGate } from "@/components/ceremony-gate";
 import { TodayHitHero } from "@/components/today-hit";
+import { TodayRoster } from "@/components/today-roster";
 import { sortTodayBoard } from "@/lib/challenge/board";
 import { localDateFromInstant } from "@/lib/challenge/day";
 import { displayNameFromJoin } from "@/lib/challenge/profile";
@@ -17,6 +18,8 @@ import { currentStreak } from "@/lib/challenge/streak";
 import { earnedMilestones } from "@/lib/challenge/milestones";
 import {
   challengeDayLine,
+  previewTodayBoard,
+  todayBoardListLabel,
   todayHitLine,
   todayStatus,
 } from "@/lib/challenge/today-copy";
@@ -179,6 +182,7 @@ export default async function AppHome({
   );
 
   const hitCount = board.filter((row) => row.hit).length;
+  const preview = previewTodayBoard(board);
   const status = todayStatus(todayReps, remaining, surplus, hit);
   const dayLine = challengeDayLine(
     dayNumber,
@@ -210,12 +214,7 @@ export default async function AppHome({
       <CheckIn error={error ? ERRORS[error] : undefined} />
       <TodaySets sets={sets ?? []} timeZone={timeZone} />
       <section className="flex flex-col gap-4">
-        <div className="flex items-baseline justify-between">
-          <h2 className="font-display text-xl font-semibold">Today board</h2>
-          <Link href="/app/board" className="text-sm underline">
-            Year board
-          </Link>
-        </div>
+        <h2 className="font-display text-xl font-semibold">Today board</h2>
         <p className="font-display text-5xl font-semibold tracking-tight">
           {hitCount}
           <span className="text-2xl text-zinc-500"> / {board.length}</span>
@@ -223,22 +222,17 @@ export default async function AppHome({
         <p className="text-sm text-zinc-500">
           {todayHitLine(hitCount, board.length)}
         </p>
-        <ul className="flex flex-col gap-2 text-sm">
-          {board.map((row) => (
-            <li key={row.id} className="flex justify-between gap-3">
-              <span className="min-w-0 truncate">
-                {row.name}
-                {row.me ? " (you)" : ""}
-              </span>
-              <span
-                className={row.hit ? "font-medium" : "text-zinc-500"}
-                style={row.hit ? { color: "var(--heatmap-hit)" } : undefined}
-              >
-                {row.hit ? "Hit" : row.total}
-              </span>
-            </li>
-          ))}
-        </ul>
+        <TodayRoster
+          rows={preview}
+          label={todayBoardListLabel(preview.length, board.length)}
+        />
+        <Link
+          href="/app/board#today"
+          className="w-fit text-sm underline"
+          aria-label="See everyone on today's board"
+        >
+          See everyone
+        </Link>
       </section>
       <CeremonyGate userId={auth.user.id} daysHit={daysHit} />
     </main>

@@ -19,6 +19,9 @@ import { earnedMilestones } from "@/lib/challenge/milestones";
 import { displayNameFromJoin } from "@/lib/challenge/profile";
 import {
   challengeDayLine,
+  previewTodayBoard,
+  TODAY_BOARD_PREVIEW,
+  todayBoardListLabel,
   todayHitLine,
   todayStatus,
 } from "@/lib/challenge/today-copy";
@@ -90,6 +93,24 @@ describe("todayHitLine", () => {
     expect(todayHitLine(0, 21)).toBe("0 of 21 hit");
     expect(todayHitLine(12, 21)).toBe("12 of 21 hit");
     expect(todayHitLine(21, 21)).toBe("21 of 21 hit");
+  });
+});
+
+describe("previewTodayBoard", () => {
+  it("keeps the first five after sort and leaves a short list intact", () => {
+    expect(TODAY_BOARD_PREVIEW).toBe(5);
+    expect(previewTodayBoard([1, 2, 3, 4, 5, 6, 7, 8])).toEqual([
+      1, 2, 3, 4, 5,
+    ]);
+    expect(previewTodayBoard(["a", "b", "c"])).toEqual(["a", "b", "c"]);
+    expect(previewTodayBoard([])).toEqual([]);
+  });
+});
+
+describe("todayBoardListLabel", () => {
+  it("says the list is a preview when names are truncated", () => {
+    expect(todayBoardListLabel(5, 33)).toBe("First 5 of 33");
+    expect(todayBoardListLabel(3, 3)).toBe("Today's board");
   });
 });
 
@@ -250,6 +271,10 @@ describe("home page is not the stub", () => {
     expect(src).not.toMatch(/Check-in lands here/);
     expect(src).toMatch(/todayStatus/);
     expect(src).toContain("todayHitLine");
+    expect(src).toContain("previewTodayBoard");
+    expect(src).toContain("/app/board#today");
+    expect(src).toContain("See everyone");
+    expect(src).not.toContain("Year board");
     expect(src).not.toContain("slice(0, 8)");
   });
 });

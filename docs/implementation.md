@@ -235,6 +235,8 @@ Phase 1 until Phase 0 is done.
 - **7.A.3** Highlight current user row. Verify: `aria-current`
   or equivalent.
 - **7.A.4** Today board section. Verify: hit vs short vs zero.
+  Home shows 5 names; count stays full; See everyone opens
+  `/app/board#today` with the full roster.
 - **7.A.5** `/app/you` 365 heatmap from `starts_on`. Verify:
   365 cells; tap shows that day's total.
 - **7.A.6** Milestone chips 7/30/100/365. Verify: 7 days hit

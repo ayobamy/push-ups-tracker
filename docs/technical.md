@@ -244,7 +244,7 @@ insert trigger.
 /auth/confirm           token_hash exchange
 /onboarding             name + timezone (authed, incomplete)
 /app                    home / today
-/app/board              leaderboard + today board
+/app/board              year ranking + full today roster (#today)
 /app/you                heatmap
 /app/you/recap          year recap card (fixed Recap button)
 /app/purse              live year-end points

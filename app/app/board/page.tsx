@@ -1,9 +1,15 @@
 import { BoardList } from "@/app/app/board-list";
-import { dailySurplus, type BoardRow } from "@/lib/challenge/board";
+import { TodayRoster } from "@/components/today-roster";
+import {
+  dailySurplus,
+  sortTodayBoard,
+  type BoardRow,
+} from "@/lib/challenge/board";
 import { localDateFromInstant } from "@/lib/challenge/day";
 import { hitPaceMs } from "@/lib/challenge/hit-at";
 import { displayNameFromJoin, timezoneFromJoin } from "@/lib/challenge/profile";
 import { currentStreak } from "@/lib/challenge/streak";
+import { todayHitLine } from "@/lib/challenge/today-copy";
 import {
   mondayOfWeek,
   weekPerfectNames,
@@ -99,6 +105,37 @@ export default async function BoardPage() {
     };
   });
 
+  const todayByUser = new Map(
+    ((totals ?? []) as TotalsRow[])
+      .filter((row) => row.local_date === today)
+      .map((row) => [
+        row.user_id,
+        {
+          total: row.total_reps,
+          hit: row.hit_goal,
+          hitAt: row.hit_at,
+        },
+      ]),
+  );
+  const todayRows = sortTodayBoard(
+    (members ?? []).map((member) => {
+      const stats = todayByUser.get(member.user_id as string);
+      const profiles = member.profiles as
+        | { display_name: string | null }
+        | { display_name: string | null }[]
+        | null;
+      return {
+        id: member.user_id as string,
+        name: displayNameFromJoin(profiles),
+        total: stats?.total ?? 0,
+        hit: stats?.hit ?? false,
+        hitAt: stats?.hitAt ?? null,
+        me: member.user_id === auth.user.id,
+      };
+    }),
+  );
+  const todayHitCount = todayRows.filter((row) => row.hit).length;
+
   const monday = mondayOfWeek(today);
   const perfectWeek = weekPerfectNames(
     rows.map((row) => ({
@@ -115,6 +152,17 @@ export default async function BoardPage() {
       <h1 className="font-display text-4xl font-semibold tracking-tight">
         Board
       </h1>
+      <section
+        id="today"
+        tabIndex={-1}
+        className="flex scroll-mt-16 flex-col gap-4"
+      >
+        <h2 className="font-display text-xl font-semibold">Today</h2>
+        <p className="text-sm text-zinc-500">
+          {todayHitLine(todayHitCount, todayRows.length)}
+        </p>
+        <TodayRoster rows={todayRows} label="Everyone today" />
+      </section>
       <section className="flex flex-col gap-2">
         <h2 className="font-display text-xl font-semibold">This week</h2>
         <p className="text-sm text-zinc-500">{weekLine}</p>
@@ -128,7 +176,10 @@ export default async function BoardPage() {
           </ul>
         )}
       </section>
-      <BoardList rows={rows} />
+      <section className="flex flex-col gap-4">
+        <h2 className="font-display text-xl font-semibold">Year</h2>
+        <BoardList rows={rows} />
+      </section>
     </main>
   );
 }

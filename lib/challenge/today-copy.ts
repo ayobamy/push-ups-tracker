@@ -30,3 +30,19 @@ export function challengeDayLine(
 export function todayHitLine(hitCount: number, memberCount: number): string {
   return `${hitCount} of ${memberCount} hit`;
 }
+
+export const TODAY_BOARD_PREVIEW = 5;
+
+export function previewTodayBoard<T>(
+  rows: readonly T[],
+  limit: number = TODAY_BOARD_PREVIEW,
+): T[] {
+  return rows.slice(0, limit);
+}
+
+export function todayBoardListLabel(shown: number, total: number): string {
+  if (total > shown) {
+    return `First ${shown} of ${total}`;
+  }
+  return "Today's board";
+}
