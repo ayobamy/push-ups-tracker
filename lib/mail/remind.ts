@@ -7,11 +7,12 @@ export function shouldSendEveningReminder(input: {
   localDate: string;
   startsOn: string;
   durationDays: number;
+  ignoreHour?: boolean;
 }): boolean {
   if (!input.optIn || input.alreadySent) {
     return false;
   }
-  if (input.localHour < 19 || input.localHour > 20) {
+  if (!input.ignoreHour && (input.localHour < 19 || input.localHour > 20)) {
     return false;
   }
   if (input.todayReps >= input.goal) {

@@ -140,6 +140,14 @@ Hobby only allows one run per day. `vercel.json` fires
 `/api/cron/remind` at **19:00 UTC** (20:00 in Africa/Lagos).
 Vercel may invoke any time in that hour. Needs `CRON_SECRET`.
 
+If that window is missed, send from this machine (still skips
+hits, opt-outs, and people already mailed today):
+
+```bash
+pnpm remind --dry-run --ignore-hour --origin=https://100-days-push-ups.fit
+pnpm remind --ignore-hour --origin=https://100-days-push-ups.fit
+```
+
 ## Sitemap and robots
 
 Live at `/sitemap.xml` and `/robots.txt`. They use

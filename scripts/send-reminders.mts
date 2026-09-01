@@ -39,8 +39,15 @@ const env: Record<string, string | undefined> = {
 };
 
 const dryRun = process.argv.includes("--dry-run");
+const ignoreHour = process.argv.includes("--ignore-hour");
+const originArg = process.argv.find((arg) => arg.startsWith("--origin="));
+if (originArg) {
+  env.NEXT_PUBLIC_SITE_URL = originArg.slice("--origin=".length);
+}
+
 const result = await sendEveningReminders({
   dryRun,
+  ignoreHour,
   env,
   log: (line) => console.log(line),
 });

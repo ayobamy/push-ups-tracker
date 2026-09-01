@@ -1,11 +1,11 @@
-import { parseSiteOrigin } from "@/lib/auth/site-url";
-import { projectRefFromUrl } from "@/lib/mail/auth-config";
+import { parseSiteOrigin } from "../auth/site-url.ts";
+import { projectRefFromUrl } from "./auth-config.ts";
 import {
   pickReminderTargets,
   reminderPayload,
   REMINDER_CANDIDATES_SQL,
   type ReminderCandidate,
-} from "@/lib/mail/remind-run";
+} from "./remind-run.ts";
 
 async function runSql(
   ref: string,
@@ -70,6 +70,7 @@ function required(env: Record<string, string>, key: string): string {
 
 export async function sendEveningReminders(input: {
   dryRun?: boolean;
+  ignoreHour?: boolean;
   env: Record<string, string | undefined>;
   log?: (line: string) => void;
 }): Promise<{ considered: number; sent: number }> {
@@ -95,6 +96,11 @@ export async function sendEveningReminders(input: {
     ) ??
     "http://localhost:3000";
   const dryRun = Boolean(input.dryRun);
+  if (!dryRun && /localhost|127\.0\.0\.1/i.test(origin)) {
+    throw new Error(
+      "Refusing to send reminder mail with localhost links. Pass --origin=https://100-days-push-ups.fit",
+    );
+  }
 
   const rows = (await runSql(
     ref,
@@ -102,7 +108,11 @@ export async function sendEveningReminders(input: {
     REMINDER_CANDIDATES_SQL,
   )) as ReminderCandidate[];
   const list = Array.isArray(rows) ? rows : [];
-  const targets = pickReminderTargets(list);
+  if (!Array.isArray(rows)) {
+    input.log?.("unexpected SQL shape; considered 0");
+  }
+  const targets = pickReminderTargets(list, { ignoreHour: input.ignoreHour });
+  input.log?.(`origin ${origin}; targets ${targets.length}`);
   let sent = 0;
 
   for (const candidate of targets) {

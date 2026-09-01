@@ -1,6 +1,6 @@
-import { remainingToGoal } from "@/lib/challenge/remaining";
-import { reminderCopy, shouldSendEveningReminder } from "@/lib/mail/remind";
-import { renderReminderEmail } from "@/lib/mail/remind-render";
+import { remainingToGoal } from "../challenge/remaining.ts";
+import { reminderCopy, shouldSendEveningReminder } from "./remind.ts";
+import { renderReminderEmail } from "./remind-render.ts";
 
 export type ReminderCandidate = {
   id: string;
@@ -53,6 +53,7 @@ where u.email is not null
 
 export function pickReminderTargets(
   rows: ReminderCandidate[],
+  options: { ignoreHour?: boolean } = {},
 ): ReminderCandidate[] {
   return rows.filter((row) =>
     shouldSendEveningReminder({
@@ -64,6 +65,7 @@ export function pickReminderTargets(
       localDate: row.local_date,
       startsOn: row.starts_on,
       durationDays: row.duration_days,
+      ignoreHour: options.ignoreHour,
     }),
   );
 }

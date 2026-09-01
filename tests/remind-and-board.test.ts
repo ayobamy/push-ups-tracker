@@ -57,6 +57,24 @@ describe("shouldSendEveningReminder", () => {
       shouldSendEveningReminder({ ...base, localDate: "2026-08-31" }),
     ).toBe(false);
   });
+
+  it("can skip the hour gate for a late local send without mailing hits", () => {
+    expect(
+      shouldSendEveningReminder({
+        ...base,
+        localHour: 22,
+        ignoreHour: true,
+      }),
+    ).toBe(true);
+    expect(
+      shouldSendEveningReminder({
+        ...base,
+        localHour: 22,
+        todayReps: 100,
+        ignoreHour: true,
+      }),
+    ).toBe(false);
+  });
 });
 
 describe("reminderCopy", () => {
@@ -119,6 +137,45 @@ describe("pickReminderTargets", () => {
         already_sent: false,
       },
     ]);
+    expect(picked.map((row) => row.email)).toEqual(["a@example.com"]);
+  });
+
+  it("ignoreHour still keeps hits out when forcing a late send", () => {
+    const picked = pickReminderTargets(
+      [
+        {
+          id: "00000000-0000-4000-8000-000000000001",
+          email: "a@example.com",
+          display_name: "A",
+          timezone: "Africa/Lagos",
+          unsubscribe_token: "00000000-0000-4000-8000-000000000011",
+          reminders_opt_in: true,
+          daily_goal: 100,
+          starts_on: "2026-08-31",
+          duration_days: 365,
+          today_reps: 10,
+          local_date: "2026-09-01",
+          local_hour: 22,
+          already_sent: false,
+        },
+        {
+          id: "00000000-0000-4000-8000-000000000002",
+          email: "b@example.com",
+          display_name: "B",
+          timezone: "Africa/Lagos",
+          unsubscribe_token: "00000000-0000-4000-8000-000000000012",
+          reminders_opt_in: true,
+          daily_goal: 100,
+          starts_on: "2026-08-31",
+          duration_days: 365,
+          today_reps: 100,
+          local_date: "2026-09-01",
+          local_hour: 22,
+          already_sent: false,
+        },
+      ],
+      { ignoreHour: true },
+    );
     expect(picked.map((row) => row.email)).toEqual(["a@example.com"]);
   });
 });
